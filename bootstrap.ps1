@@ -28,7 +28,7 @@ Write-Host ""
 # Status check mode
 # ============================================================================
 
-function Check-Tool {
+function Test-Tool {
     param([string]$Name, [string]$Command, [string]$Check)
     
     try {
@@ -37,7 +37,8 @@ function Check-Tool {
             Write-Host "  [OK] $Name" -ForegroundColor Green
             return $true
         }
-    } catch {}
+    }
+    catch {}
     Write-Host "  [--] $Name" -ForegroundColor Yellow
     return $false
 }
@@ -45,19 +46,20 @@ function Check-Tool {
 if ($Status) {
     Write-Host "Estado de la infraestructura:" -ForegroundColor White
     Write-Host ""
-    Check-Tool "Node.js" "node" "node --version"
-    Check-Tool "npm" "npm" "npm --version"
-    Check-Tool "Git" "git" "git --version"
-    Check-Tool "GitHub CLI" "gh" "gh --version"
-    Check-Tool "Claude Code" "claude" "claude --version"
-    Check-Tool "Beads (bd)" "bd" "bd --version"
-    Check-Tool "Gemini MCP" "gemini-mcp" "npm list -g @rlabs-inc/gemini-mcp"
+    Test-Tool "Node.js" "node" "node --version"
+    Test-Tool "npm" "npm" "npm --version"
+    Test-Tool "Git" "git" "git --version"
+    Test-Tool "GitHub CLI" "gh" "gh --version"
+    Test-Tool "Claude Code" "claude" "claude --version"
+    Test-Tool "Beads (bd)" "bd" "bd --version"
+    Test-Tool "Gemini MCP" "gemini-mcp" "npm list -g @rlabs-inc/gemini-mcp"
     
     # Check proxy
     $proxyDir = Join-Path $HOME "repos\antigravity-claude-proxy"
     if (Test-Path $proxyDir) {
         Write-Host "  [OK] antigravity-claude-proxy" -ForegroundColor Green
-    } else {
+    }
+    else {
         Write-Host "  [--] antigravity-claude-proxy" -ForegroundColor Yellow
     }
     
@@ -76,6 +78,21 @@ Write-Host "Verificando prerequisitos..." -ForegroundColor White
 $prereqOk = $true
 
 # Node.js
+# Attempt to find Node.js if not in PATH
+if (-not (Get-Command node -ErrorAction SilentlyContinue)) {
+    $nodePaths = @(
+        "C:\Program Files\nodejs",
+        "C:\Program Files (x86)\nodejs"
+    )
+    foreach ($path in $nodePaths) {
+        if (Test-Path $path) {
+            Write-Host "  [!] Node.js encontrado en $path pero no en PATH. Agregando temporalmente..." -ForegroundColor Yellow
+            $env:Path = "$path;$env:Path"
+            break
+        }
+    }
+}
+
 try { node --version 2>$null | Out-Null } catch {
     Write-Host "  [X] Node.js no encontrado. Instala desde https://nodejs.org" -ForegroundColor Red
     $prereqOk = $false
@@ -108,7 +125,8 @@ if (-not $SkipBeads) {
 
     if ($bdExists) {
         Write-Host "  Ya instalado. Saltando." -ForegroundColor Green
-    } else {
+    }
+    else {
         Write-Host "  Instalando via npm..." -ForegroundColor Blue
         npm install -g beads-cli 2>$null
         if ($LASTEXITCODE -ne 0) {
@@ -123,11 +141,13 @@ if (-not $SkipBeads) {
                 npm link 2>$null
                 Pop-Location
                 Write-Host "  Instalado desde source." -ForegroundColor Green
-            } else {
+            }
+            else {
                 Write-Host "  [!] No se pudo instalar Beads. Puedes instalarlo manualmente despues." -ForegroundColor Yellow
                 Write-Host "      https://github.com/steveyegge/beads" -ForegroundColor Gray
             }
-        } else {
+        }
+        else {
             Write-Host "  Instalado." -ForegroundColor Green
         }
     }
@@ -148,7 +168,8 @@ if (-not $SkipGeminiMcp) {
     if (-not $claudeExists) {
         Write-Host "  Claude Code no encontrado. Saltando gemini-mcp." -ForegroundColor Yellow
         Write-Host "  Instala Claude Code primero: https://docs.claude.com/en/docs/claude-code" -ForegroundColor Gray
-    } else {
+    }
+    else {
         # Check for Gemini API key
         $geminiKey = $env:GEMINI_API_KEY
         if ([string]::IsNullOrEmpty($geminiKey)) {
@@ -158,7 +179,8 @@ if (-not $SkipGeminiMcp) {
             if ([string]::IsNullOrEmpty($geminiKey)) {
                 Write-Host "  Saltando. Puedes configurarlo despues con:" -ForegroundColor Yellow
                 Write-Host '  claude mcp add gemini -s user -- env GEMINI_API_KEY=TU_KEY npx -y @rlabs-inc/gemini-mcp' -ForegroundColor Gray
-            } else {
+            }
+            else {
                 # Set it permanently
                 [Environment]::SetEnvironmentVariable("GEMINI_API_KEY", $geminiKey, "User")
                 $env:GEMINI_API_KEY = $geminiKey
@@ -170,7 +192,8 @@ if (-not $SkipGeminiMcp) {
             claude mcp add gemini -s user -- env "GEMINI_API_KEY=$geminiKey" npx -y "@rlabs-inc/gemini-mcp" 2>$null
             if ($LASTEXITCODE -eq 0) {
                 Write-Host "  Configurado." -ForegroundColor Green
-            } else {
+            }
+            else {
                 Write-Host "  [!] Error al configurar. Puedes hacerlo manualmente:" -ForegroundColor Yellow
                 Write-Host '  claude mcp add gemini -s user -- env GEMINI_API_KEY=KEY npx -y @rlabs-inc/gemini-mcp' -ForegroundColor Gray
             }
@@ -194,7 +217,8 @@ if (-not $SkipProxy) {
         git pull --quiet 2>$null
         Pop-Location
         Write-Host "  Actualizado." -ForegroundColor Green
-    } else {
+    }
+    else {
         Write-Host "  Clonando..." -ForegroundColor Blue
         git clone https://github.com/badrisnarayanan/antigravity-claude-proxy.git $proxyDir 2>$null
         if (Test-Path $proxyDir) {
@@ -203,7 +227,8 @@ if (-not $SkipProxy) {
             Pop-Location
             Write-Host "  Instalado. Para ejecutar:" -ForegroundColor Green
             Write-Host "    cd $proxyDir && npm start" -ForegroundColor Gray
-        } else {
+        }
+        else {
             Write-Host "  [!] No se pudo clonar. Puedes hacerlo manualmente:" -ForegroundColor Yellow
             Write-Host "      git clone https://github.com/badrisnarayanan/antigravity-claude-proxy.git $proxyDir" -ForegroundColor Gray
         }
@@ -232,6 +257,6 @@ Write-Host ("=" * 50) -ForegroundColor Cyan
 Write-Host ""
 Write-Host "Para verificar estado:  .\bootstrap.ps1 -Status" -ForegroundColor Gray
 Write-Host ""
-Write-Host "Siguiente paso — en cada proyecto nuevo:" -ForegroundColor White
-Write-Host "  .\new-project.ps1 -Name mi-proyecto" -ForegroundColor Yellow
+Write-Host "Siguiente paso - en cada proyecto nuevo:" -ForegroundColor White
+Write-Host '  .\new-project.ps1 -Name mi-proyecto' -ForegroundColor Yellow
 Write-Host ""
