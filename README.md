@@ -126,7 +126,7 @@ Abre el proyecto en Antigravity o Claude Code y di:
 
 Qué hace:
 1. Crea el directorio si no existe
-2. Instala 13 agentes + 4 reglas (opción 4 del instalador)
+2. Instala 13 agentes + 8 reglas (opción 4 del instalador)
 3. Inicializa Git si no tiene
 4. Inicializa Beads para task tracking
 

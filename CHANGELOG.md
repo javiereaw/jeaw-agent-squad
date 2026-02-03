@@ -9,10 +9,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/).
 ### Added
 - **Code Reviewer** agent (`code-reviewer`) — Reviews PRs and code with technical rigor, guides how to receive feedback properly
 - **Systematic Debugger** agent (`systematic-debugger`) — Debugging specialist following scientific method, finds root causes before proposing fixes
+- 4 missing rules now included in install scripts:
+  - `symlink-integrity.md` — Keeps .agent/ and .claude/ synchronized
+  - `documentation-first.md` — Documentation as priority
+  - `verification-before-completion.md` — Verify before claiming DONE
+  - `mandatory-agent-activation.md` — Always read SKILL.md before acting
 
 ### Changed
 - Team expanded from 11 to 13 agents
-- Updated all documentation (README, QUICKREF) to reflect new agent count
+- Rules expanded from 4 to 8 in install scripts
+- Updated all documentation (README, QUICKREF) to reflect new counts
 - Updated transparency rule examples with new agents
 
 ---

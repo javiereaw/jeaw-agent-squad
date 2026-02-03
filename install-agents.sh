@@ -2601,13 +2601,241 @@ All convergence features are **optional**. If Beads is not initialized, if Workt
 RULES_EOF
   echo -e "  ${GREEN}✅${NC} rules/convergence-architecture.md"
 
+  cat > "$RULES_DIR/symlink-integrity.md" << 'RULES_EOF'
+# Symlink Integrity Rule
+
+## Purpose
+
+Ensure that `.agent/` (the canonical source) and `.claude/` (the symlink) are always synchronized.
+
+## Architecture
+
+```
+.agent/                    <- CANONICAL SOURCE (edit here)
+-- rules/
+-- skills/
+
+.claude/                   <- SYMLINK (auto-synced)
+-- rules/ -> ../.agent/rules/
+-- skills/ -> ../.agent/skills/
+```
+
+## Rules
+
+### 1. Always Edit in `.agent/`
+
+**NEVER edit files in `.claude/` directly.** The `.claude/` directory contains symlinks pointing to `.agent/`.
+
+### 2. Verify Symlinks on Session Start
+
+Linux/macOS: `ls -la .claude/`
+Windows: `(Get-Item .claude\rules).Target`
+
+### 3. Repair Broken Symlinks
+
+```bash
+rm -f .claude/rules .claude/skills
+ln -s ../.agent/rules .claude/rules
+ln -s ../.agent/skills .claude/skills
+```
+
+### 4. Multi-Tool Symlinks
+
+| Tool | Symlink Path | Target |
+|------|--------------|--------|
+| Claude Code | `.claude/skills/` | `../.agent/skills/` |
+| Antigravity | `.gemini/skills/` | `../.agent/skills/` |
+| Cursor | `.cursor/skills/` | `../.agent/skills/` |
+
+## Why This Matters
+
+1. **Single Source of Truth**: All tools read from the same skills
+2. **No Drift**: Changes in one place propagate everywhere
+3. **Cross-Tool Consistency**: Claude, Gemini, Cursor all behave the same
+RULES_EOF
+  echo -e "  ${GREEN}✅${NC} rules/symlink-integrity.md"
+
+  cat > "$RULES_DIR/documentation-first.md" << 'RULES_EOF'
+# Documentation-First Rule
+
+## Purpose
+
+Every project must have documentation comprehensive enough that **any new team member can understand the entire project in record time**.
+
+## The Standard
+
+A new developer joining the team should be able to:
+
+1. **In 5 minutes**: Understand what the project does and why it exists
+2. **In 30 minutes**: Set up a local development environment
+3. **In 2 hours**: Understand the architecture and make their first contribution
+4. **In 1 day**: Work independently on most tasks
+
+## Required Documentation
+
+### Tier 1: MUST HAVE (Day 1)
+
+| Document | Location | Content |
+|----------|----------|---------|
+| **README.md** | Root | Project purpose, quick start, tech stack |
+| **CONTRIBUTING.md** | Root | How to contribute, PR process, coding standards |
+| **docs/ARCHITECTURE.md** | docs/ | System overview, components, data flow |
+| **docs/SETUP.md** | docs/ | Complete local setup instructions |
+
+### Tier 2: SHOULD HAVE (Week 1)
+
+| Document | Location | Content |
+|----------|----------|---------|
+| **docs/STACK.md** | docs/ | Why each technology was chosen |
+| **docs/API.md** | docs/ | API endpoints, request/response examples |
+| **CHANGELOG.md** | Root | Version history with changes |
+
+## The docs-writer Agent
+
+The docs-writer agent is responsible for documentation. Invoke it:
+
+```
+"Document the authentication flow"
+"Update the README with the new setup steps"
+"Create an ADR for the database migration"
+```
+
+## Why This Matters
+
+1. **Faster onboarding**: New hires productive in hours, not weeks
+2. **Reduced interruptions**: "Read the docs" is a valid answer
+3. **Knowledge preservation**: When people leave, knowledge stays
+RULES_EOF
+  echo -e "  ${GREEN}✅${NC} rules/documentation-first.md"
+
+  cat > "$RULES_DIR/verification-before-completion.md" << 'RULES_EOF'
+# Verification Before Completion Rule
+
+## The Iron Law
+
+```
+NO COMPLETION CLAIMS WITHOUT FRESH VERIFICATION EVIDENCE
+```
+
+Claiming work is complete without verification is dishonesty, not efficiency.
+
+**If you have not run the verification command in this message, you cannot claim it passes.**
+
+## The Gate Function
+
+```
+BEFORE claiming any status:
+
+1. IDENTIFY: What command proves this claim?
+2. RUN: Execute the FULL command (fresh, complete)
+3. READ: Full output, check exit code, count failures
+4. VERIFY: Does output confirm the claim?
+   - If NO: State actual status with evidence
+   - If YES: State claim WITH evidence
+5. ONLY THEN: Make the claim
+
+Skip any step = lying, not verifying
+```
+
+## Verification Requirements
+
+| Claim | Requires | NOT Sufficient |
+|-------|----------|----------------|
+| "Tests pass" | Test command output: 0 failures | Previous run, "should pass" |
+| "Linter clean" | Linter output: 0 errors | Partial check |
+| "Build succeeds" | Build command: exit 0 | Linter passing |
+| "Bug fixed" | Test original symptom: passes | Code changed, assumed fixed |
+| "Task complete" | All acceptance criteria verified | Agent reports "success" |
+
+## Red Flags - STOP
+
+If you catch yourself:
+- Using "should", "probably", "seems to"
+- Expressing satisfaction before verification ("Great!", "Done!")
+- About to commit/push/PR without fresh verification
+- Trusting agent success reports without checking
+
+**ALL of these mean: STOP. Run the verification.**
+
+## Enforcement
+
+This rule applies to ALL agents, ALL claims, ALL the time.
+
+**No shortcuts for verification. Run the command. Read the output. THEN claim the result.**
+RULES_EOF
+  echo -e "  ${GREEN}✅${NC} rules/verification-before-completion.md"
+
+  cat > "$RULES_DIR/mandatory-agent-activation.md" << 'RULES_EOF'
+# Mandatory Agent Activation Rule
+
+## Purpose
+
+This rule ensures that AI assistants ALWAYS read and follow the appropriate SKILL.md file before responding to any work request.
+
+## The Problem This Solves
+
+Without this rule:
+- AI responds with generic knowledge instead of specialized agent behavior
+- Skills are ignored even though they exist in the project
+- Inconsistent quality and methodology across responses
+
+## MANDATORY Workflow
+
+### Step 1: Detect the Task Type
+
+| Keywords/Context | Agent |
+|------------------|-------|
+| "audit", "review", "analyze project" | project-auditor |
+| "plan", "sprint", "prioritize", "delegate" | tech-lead |
+| "implement", "fix", "code", "build", "refactor" | developer |
+| "security", "vulnerability", "harden", "OWASP" | security-hardener |
+| "performance", "slow", "optimize", "latency" | performance-optimizer |
+| "test", "coverage", "unit test", "e2e", "TDD" | test-engineer |
+| "document", "readme", "changelog", "ADR" | docs-writer |
+| "deploy", "CI/CD", "docker", "pipeline" | devops-engineer |
+| "accessibility", "a11y", "WCAG", "ARIA" | accessibility-auditor |
+| "parallel", "dispatch", "waves", "orchestrate" | orchestrator |
+| "evaluate agents", "improve skills", "team review" | agent-architect |
+| "PR review", "code review", "review my code" | code-reviewer |
+| "bug", "debug", "error", "failing", "broken" | systematic-debugger |
+
+### Step 2: Read the SKILL.md File
+
+**BEFORE writing any response**, read: `.agent/skills/{agent-name}/SKILL.md`
+
+### Step 3: Follow the Skill Instructions
+
+The SKILL.md file contains: Role, When to Use, Workflow, Output Format, Critical Rules.
+
+**You MUST follow these instructions, not your default behavior.**
+
+### Step 4: Identify Yourself
+
+Per the Transparency Rule, start your response with:
+`[emoji agent-name] -- brief reason for activation`
+
+## Fallback: No Matching Agent
+
+If no agent matches the request, respond normally without agent identification.
+
+## Enforcement
+
+This rule is **NON-NEGOTIABLE** for any project using JEAW Agent Squad.
+
+If you notice you responded without reading the skill:
+1. Acknowledge the error
+2. Read the skill
+3. Provide a corrected response following the skill methodology
+RULES_EOF
+  echo -e "  ${GREEN}✅${NC} rules/mandatory-agent-activation.md"
+
   # --- Version file ---
   VERSION_DIR="$(dirname "$TARGET")"
   echo "$VERSION" > "$VERSION_DIR/.version"
   echo -e "  ${GREEN}✅${NC} .version (v${VERSION})"
 
   echo ""
-  echo -e "${GREEN}✅ 11 agentes + reglas instalados en $(dirname "$TARGET")${NC}"
+  echo -e "${GREEN}✅ 13 agentes + 8 reglas instalados en $(dirname "$TARGET")${NC}"
 done
 
 # ============================================================================
@@ -2684,11 +2912,15 @@ echo -e "  🎭 orchestrator           Dispatch paralelo de agentes en Agent Man
 echo -e "  👁️ code-reviewer          Revisión de PRs y código con rigor técnico"
 echo -e "  🔬 systematic-debugger    Debugging con método científico"
 echo ""
-echo -e "Reglas de comportamiento:"
-echo -e "  📋 transparency.md          Cada agente se identifica al responder"
-echo -e "  🆕 onboarding.md            Detecta proyectos nuevos y sugiere setup"
-echo -e "  🔄 periodic-evaluation.md   Retrospectiva del equipo cada 2-3 sprints"
+echo -e "Reglas de comportamiento (8):"
+echo -e "  📋 transparency.md              Cada agente se identifica al responder"
+echo -e "  🆕 onboarding.md                Detecta proyectos nuevos y sugiere setup"
+echo -e "  🔄 periodic-evaluation.md       Retrospectiva del equipo cada 2-3 sprints"
 echo -e "  🏗️  convergence-architecture.md  Coordinación multi-agente (Beads + Worktrees)"
+echo -e "  🔗 symlink-integrity.md         Mantiene .agent/ y .claude/ sincronizados"
+echo -e "  📚 documentation-first.md       Documentación como prioridad"
+echo -e "  ✅ verification-before-completion.md  Verificar antes de decir DONE"
+echo -e "  🎯 mandatory-agent-activation.md     Siempre leer SKILL.md antes de actuar"
 echo ""
 echo -e "${CYAN}Arquitectura de Convergencia (opcional):${NC}"
 echo -e "  Los agentes ya incluyen soporte para Beads + Git Worktrees."
