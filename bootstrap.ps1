@@ -233,5 +233,5 @@ Write-Host ""
 Write-Host "Para verificar estado:  .\bootstrap.ps1 -Status" -ForegroundColor Gray
 Write-Host ""
 Write-Host "Siguiente paso — en cada proyecto nuevo:" -ForegroundColor White
-Write-Host '  .\new-project.ps1 -Name "mi-proyecto" -Path "C:\www\mi-proyecto"' -ForegroundColor Yellow
+Write-Host '  .\new-project.ps1 -Name "mi-proyecto"' -ForegroundColor Yellow
 Write-Host ""
