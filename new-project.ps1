@@ -3,14 +3,16 @@
     JEAW Agent Squad — New Project Setup
     One command to set up agents + convergence in any project
 .EXAMPLE
-    .\new-project.ps1 -Path "C:\www\mi-proyecto"
-    .\new-project.ps1 -Path "." 
-    .\new-project.ps1 -Path "C:\www\roi-inmobiliario" -SkipBeads
+    .\new-project.ps1 -Name "roi-inmobiliario"
+    .\new-project.ps1 -Name "scorm-aragon"
+    .\new-project.ps1 -Path "D:\otro-sitio\proyecto"
+    .\new-project.ps1 -Name "mi-proyecto" -SkipBeads
 #>
 
 param(
-    [Parameter(Mandatory=$true)]
+    [string]$Name,
     [string]$Path,
+    [string]$Base = "C:\www",
     
     [switch]$SkipBeads,
     [switch]$SkipAgents
@@ -18,6 +20,15 @@ param(
 
 $ErrorActionPreference = "Continue"
 [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
+
+# Resolve path: -Name uses Base, -Path is absolute
+if ($Name -and -not $Path) {
+    $Path = Join-Path $Base $Name
+} elseif (-not $Path) {
+    Write-Host "Uso: .\new-project.ps1 -Name 'mi-proyecto'" -ForegroundColor Red
+    Write-Host "  o: .\new-project.ps1 -Path 'C:\ruta\completa'" -ForegroundColor Red
+    exit 1
+}
 
 # Resolve path
 $Path = [System.IO.Path]::GetFullPath($Path)
@@ -180,4 +191,7 @@ Write-Host "Abre el proyecto en Antigravity o Claude Code y di:" -ForegroundColo
 Write-Host '  "Audita este proyecto"' -ForegroundColor Yellow
 Write-Host '  "Crea un sprint plan"' -ForegroundColor Yellow
 Write-Host '  "Ejecuta el Sprint 1 en paralelo"' -ForegroundColor Yellow
+Write-Host ""
+Write-Host "Para mas proyectos:" -ForegroundColor Gray
+Write-Host '  .\new-project.ps1 -Name "otro-proyecto"' -ForegroundColor Gray
 Write-Host ""

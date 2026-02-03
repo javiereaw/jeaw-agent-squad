@@ -12,10 +12,17 @@ cd C:\www\agentes
 
 ```powershell
 cd C:\www\agentes
-.\new-project.ps1 -Path "C:\www\mi-proyecto"
+.\new-project.ps1 -Name "roi-inmobiliario"
+.\new-project.ps1 -Name "scorm-aragon"
+.\new-project.ps1 -Name "pass-the-ball"
 ```
 
-Eso instala los 11 agentes + inicializa Beads. Listo para trabajar.
+Crea `C:\www\<nombre>` con los 11 agentes + Beads. Listo para trabajar.
+
+Si el proyecto está en otra ruta:
+```powershell
+.\new-project.ps1 -Path "D:\otro-sitio\proyecto"
+```
 
 ## Actualizar agentes en un proyecto existente
 
