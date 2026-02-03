@@ -1,0 +1,16 @@
+{
+  "name": "jeaw-orchestrator-daemon",
+  "version": "1.0.0",
+  "description": "Automatic orchestration daemon for JEAW Agent Squad",
+  "main": "orchestrator-daemon.js",
+  "scripts": {
+    "start": "node orchestrator-daemon.js",
+    "start:watch": "node orchestrator-daemon.js --watch"
+  },
+  "keywords": ["agents", "orchestration", "claude", "gemini", "beads"],
+  "license": "MIT",
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.39.0",
+    "@google/generative-ai": "^0.21.0"
+  }
+}

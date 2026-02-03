@@ -1,0 +1,48 @@
+{
+  "mode": "auto",
+  "polling_interval_ms": 5000,
+  "max_parallel_workers": 4,
+  "dry_run": false,
+  "models": {
+    "claude": {
+      "api_key_env": "ANTHROPIC_API_KEY",
+      "model": "claude-sonnet-4-20250514",
+      "max_tokens": 8192,
+      "agents": [
+        "developer",
+        "security-hardener",
+        "performance-optimizer",
+        "test-engineer",
+        "devops-engineer"
+      ]
+    },
+    "gemini": {
+      "api_key_env": "GEMINI_API_KEY",
+      "model": "gemini-2.0-flash",
+      "agents": [
+        "project-auditor",
+        "tech-lead",
+        "orchestrator",
+        "agent-architect",
+        "accessibility-auditor",
+        "docs-writer"
+      ]
+    }
+  },
+  "beads": {
+    "command": "bd",
+    "ready_filter": "--status ready --format json",
+    "close_command": "bd close"
+  },
+  "paths": {
+    "skills": ".agent/skills",
+    "rules": ".agent/rules",
+    "log_file": ".daemon.log"
+  },
+  "hooks": {
+    "on_task_start": null,
+    "on_task_complete": null,
+    "on_task_error": null,
+    "on_wave_complete": null
+  }
+}

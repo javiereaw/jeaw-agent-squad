@@ -94,17 +94,19 @@ Abre el proyecto en Antigravity o Claude Code y di:
 ### `bootstrap.ps1` — Infraestructura global (una vez)
 
 ```powershell
-.\bootstrap.ps1              # Instala Beads, gemini-mcp, proxy
+.\bootstrap.ps1              # Instala todo
 .\bootstrap.ps1 -Status      # Verifica qué está instalado
 .\bootstrap.ps1 -SkipProxy   # Salta componentes específicos
+.\bootstrap.ps1 -SkipDaemon  # Sin orquestador automático
 ```
 
 | Qué instala | Para qué |
 |-------------|----------|
 | Beads (bd) | Task tracker Git-backed entre agentes |
-| gemini-mcp | Gemini como oráculo de contexto para Claude Code |
+| gemini-mcp | Gemini como oráculo de contexto para Claude Code CLI |
 | antigravity-claude-proxy | Unifica suscripciones Claude + Gemini |
 | Vibe Kanban (info) | Dashboard visual (se ejecuta con `npx`) |
+| Orchestrator Daemon | Orquestación automática multi-agente |
 
 ### `new-project.ps1` — Setup de proyecto (30 segundos)
 
@@ -220,6 +222,59 @@ Los symlinks sincronizan automáticamente — editar en `.agent/` actualiza `.cl
 "Evalúa el equipo" / "Retrospectiva"
 → Agent Architect analiza rendimiento, sugiere mejoras, cherry-pick de repos externos
 ```
+
+---
+
+## Modos de Operación
+
+### Modo Manual (por defecto)
+
+Tú diriges cada agente desde una ventana/terminal:
+
+```
+Ventana 1 (VS Code + Claude):    "Audita este proyecto"
+Ventana 2 (Antigravity/Gemini):  "Crea un sprint plan"
+Ventana 3 (VS Code + Claude):    "Ejecuta la tarea DEV-001"
+```
+
+- Control total sobre cada agente
+- Ideal para tareas exploratorias o debugging
+- Máximo paralelismo = número de ventanas abiertas
+
+### Modo Automático (daemon)
+
+El orchestrator-daemon monitorea Beads y ejecuta tareas automáticamente:
+
+```powershell
+# En el proyecto donde quieres orquestación automática
+node C:\www\agentes\daemon\orchestrator-daemon.js --project .
+
+# Con dry-run para ver qué haría sin ejecutar
+node C:\www\agentes\daemon\orchestrator-daemon.js --project . --dry-run
+
+# Ver estado
+node C:\www\agentes\daemon\orchestrator-daemon.js --status
+```
+
+Requisitos para modo automático:
+- `ANTHROPIC_API_KEY` en variables de entorno (para agentes Claude)
+- `GEMINI_API_KEY` en variables de entorno (para agentes Gemini)
+- Beads inicializado en el proyecto (`bd init`)
+
+El daemon:
+1. Monitorea Beads cada 5 segundos para tareas `ready`
+2. Asigna cada tarea al modelo correcto (Claude o Gemini)
+3. Ejecuta hasta 4 workers en paralelo
+4. Cierra tareas automáticamente al completar
+
+Configuración personalizada: copia `daemon/config.example.json` a `daemon/config.json`.
+
+### Modo Híbrido
+
+Puedes usar ambos modos simultáneamente:
+- Daemon ejecutando tareas en background
+- Tú trabajando manualmente en ventanas separadas
+- Beads coordina el estado compartido
 
 ---
 

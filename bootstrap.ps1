@@ -3,7 +3,7 @@
     JEAW Agent Squad — Global Bootstrap (run ONCE per machine)
     Installs all infrastructure tools needed for the convergence architecture
 .DESCRIPTION
-    Installs: Beads, gemini-mcp, antigravity-claude-proxy, Vibe Kanban
+    Installs: Beads, gemini-mcp, antigravity-claude-proxy, Vibe Kanban, Orchestrator Daemon
     Only needs to run once. Safe to re-run (skips already installed tools).
 #>
 
@@ -12,6 +12,7 @@ param(
     [switch]$SkipGeminiMcp,
     [switch]$SkipProxy,
     [switch]$SkipKanban,
+    [switch]$SkipDaemon,
     [switch]$Status
 )
 
@@ -46,14 +47,18 @@ function Test-Tool {
 if ($Status) {
     Write-Host "Estado de la infraestructura:" -ForegroundColor White
     Write-Host ""
-    Test-Tool "Node.js" "node" "node --version"
-    Test-Tool "npm" "npm" "npm --version"
-    Test-Tool "Git" "git" "git --version"
-    Test-Tool "GitHub CLI" "gh" "gh --version"
-    Test-Tool "Claude Code" "claude" "claude --version"
-    Test-Tool "Beads (bd)" "bd" "bd --version"
-    Test-Tool "Gemini MCP" "gemini-mcp" "npm list -g @rlabs-inc/gemini-mcp"
-    
+    Write-Host "  REQUERIDOS:" -ForegroundColor White
+    $null = Test-Tool "Node.js" "node" "node --version"
+    $null = Test-Tool "npm" "npm" "npm --version"
+    $null = Test-Tool "Git" "git" "git --version"
+    $null = Test-Tool "Beads (bd)" "bd" "bd --version"
+
+    Write-Host ""
+    Write-Host "  OPCIONALES:" -ForegroundColor White
+    $null = Test-Tool "GitHub CLI" "gh" "gh --version"
+    $null = Test-Tool "Claude Code CLI" "claude" "claude --version"
+    $null = Test-Tool "Gemini MCP" "gemini-mcp" "npm list -g @rlabs-inc/gemini-mcp"
+
     # Check proxy
     $proxyDir = Join-Path $HOME "repos\antigravity-claude-proxy"
     if (Test-Path $proxyDir) {
@@ -62,7 +67,17 @@ if ($Status) {
     else {
         Write-Host "  [--] antigravity-claude-proxy" -ForegroundColor Yellow
     }
-    
+
+    # Check daemon
+    $daemonDir = Join-Path $PSScriptRoot "daemon"
+    $daemonPkg = Join-Path $daemonDir "node_modules"
+    if (Test-Path $daemonPkg) {
+        Write-Host "  [OK] orchestrator-daemon" -ForegroundColor Green
+    }
+    else {
+        Write-Host "  [--] orchestrator-daemon (run bootstrap to install)" -ForegroundColor Yellow
+    }
+
     Write-Host ""
     Write-Host "Usa sin -Status para instalar lo que falta." -ForegroundColor Gray
     Write-Host ""
@@ -80,22 +95,44 @@ $prereqOk = $true
 # Node.js
 # Attempt to find Node.js if not in PATH
 if (-not (Get-Command node -ErrorAction SilentlyContinue)) {
-    $nodePaths = @(
-        "C:\Program Files\nodejs",
-        "C:\Program Files (x86)\nodejs"
-    )
-    foreach ($path in $nodePaths) {
-        if (Test-Path $path) {
-            Write-Host "  [!] Node.js encontrado en $path pero no en PATH. Agregando temporalmente..." -ForegroundColor Yellow
-            $env:Path = "$path;$env:Path"
-            break
+    # Check if NVM for Windows is installed but no version is active
+    $nvmExists = Get-Command nvm -ErrorAction SilentlyContinue
+    if ($nvmExists) {
+        $nvmList = nvm list 2>&1
+        if ($nvmList -match "No installations recognized") {
+            Write-Host "  [!] NVM instalado pero sin version activa de Node.js." -ForegroundColor Yellow
+            Write-Host "      Ejecuta: nvm install lts && nvm use lts" -ForegroundColor Cyan
+            $prereqOk = $false
+        }
+        elseif ($nvmList -match "\*") {
+            # NVM has a version but it's not in current shell
+            Write-Host "  [!] NVM tiene versiones pero ninguna activa en esta sesion." -ForegroundColor Yellow
+            Write-Host "      Ejecuta: nvm use <version>" -ForegroundColor Cyan
+            $prereqOk = $false
+        }
+    }
+    else {
+        # No NVM, try direct Node.js paths
+        $nodePaths = @(
+            "C:\Program Files\nodejs",
+            "C:\Program Files (x86)\nodejs"
+        )
+        foreach ($path in $nodePaths) {
+            if (Test-Path $path) {
+                Write-Host "  [!] Node.js encontrado en $path pero no en PATH. Agregando temporalmente..." -ForegroundColor Yellow
+                $env:Path = "$path;$env:Path"
+                break
+            }
         }
     }
 }
 
 try { node --version 2>$null | Out-Null } catch {
-    Write-Host "  [X] Node.js no encontrado. Instala desde https://nodejs.org" -ForegroundColor Red
-    $prereqOk = $false
+    if ($prereqOk) {
+        # Only show this if we haven't already given NVM-specific instructions
+        Write-Host "  [X] Node.js no encontrado. Instala desde https://nodejs.org" -ForegroundColor Red
+        $prereqOk = $false
+    }
 }
 
 # Git
@@ -118,7 +155,7 @@ Write-Host ""
 # ============================================================================
 
 if (-not $SkipBeads) {
-    Write-Host "[1/4] Beads (task tracker)..." -ForegroundColor Cyan
+    Write-Host "[1/5] Beads (task tracker)..." -ForegroundColor Cyan
 
     $bdExists = $false
     try { bd --version 2>$null | Out-Null; $bdExists = $true } catch {}
@@ -132,18 +169,43 @@ if (-not $SkipBeads) {
         if ($LASTEXITCODE -ne 0) {
             Write-Host "  npm install fallo. Intentando instalacion manual..." -ForegroundColor Yellow
             $beadsDir = Join-Path $HOME "repos\beads"
+            $beadsNpmDir = Join-Path $beadsDir "npm-package"
+
             if (-not (Test-Path $beadsDir)) {
+                Write-Host "  Clonando repositorio..." -ForegroundColor Blue
                 git clone https://github.com/steveyegge/beads.git $beadsDir 2>$null
             }
-            if (Test-Path $beadsDir) {
-                Push-Location $beadsDir
+
+            if (Test-Path $beadsNpmDir) {
+                Push-Location $beadsNpmDir
+                Write-Host "  Instalando dependencias..." -ForegroundColor Blue
                 npm install 2>$null
+
+                # If postinstall failed to extract, try manually
+                $bdExe = Join-Path $beadsNpmDir "bin\bd.exe"
+                $bdZip = Get-ChildItem (Join-Path $beadsNpmDir "bin") -Filter "*.zip" -ErrorAction SilentlyContinue | Select-Object -First 1
+                if (-not (Test-Path $bdExe) -and $bdZip) {
+                    Write-Host "  Extrayendo binario manualmente..." -ForegroundColor Blue
+                    Expand-Archive -Path $bdZip.FullName -DestinationPath (Join-Path $beadsNpmDir "bin") -Force 2>$null
+                }
+
                 npm link 2>$null
                 Pop-Location
-                Write-Host "  Instalado desde source." -ForegroundColor Green
+
+                # Verify installation
+                $bdInstalled = $false
+                try { bd --version 2>$null | Out-Null; $bdInstalled = $true } catch {}
+
+                if ($bdInstalled) {
+                    Write-Host "  Instalado desde source." -ForegroundColor Green
+                }
+                else {
+                    Write-Host "  [!] Instalacion incompleta. Ejecuta manualmente:" -ForegroundColor Yellow
+                    Write-Host "      cd $beadsNpmDir && npm link" -ForegroundColor Gray
+                }
             }
             else {
-                Write-Host "  [!] No se pudo instalar Beads. Puedes instalarlo manualmente despues." -ForegroundColor Yellow
+                Write-Host "  [!] No se pudo clonar Beads. Puedes instalarlo manualmente:" -ForegroundColor Yellow
                 Write-Host "      https://github.com/steveyegge/beads" -ForegroundColor Gray
             }
         }
@@ -159,7 +221,7 @@ if (-not $SkipBeads) {
 # ============================================================================
 
 if (-not $SkipGeminiMcp) {
-    Write-Host "[2/4] Gemini MCP (Gemini como oraculo para Claude Code)..." -ForegroundColor Cyan
+    Write-Host "[2/5] Gemini MCP (Gemini como oraculo para Claude Code)..." -ForegroundColor Cyan
 
     # Check if Claude Code is available
     $claudeExists = $false
@@ -207,7 +269,7 @@ if (-not $SkipGeminiMcp) {
 # ============================================================================
 
 if (-not $SkipProxy) {
-    Write-Host "[3/4] Antigravity Claude Proxy (unifica suscripciones)..." -ForegroundColor Cyan
+    Write-Host "[3/5] Antigravity Claude Proxy (unifica suscripciones)..." -ForegroundColor Cyan
 
     $proxyDir = Join-Path $HOME "repos\antigravity-claude-proxy"
 
@@ -241,9 +303,45 @@ if (-not $SkipProxy) {
 # ============================================================================
 
 if (-not $SkipKanban) {
-    Write-Host "[4/4] Vibe Kanban (dashboard visual)..." -ForegroundColor Cyan
+    Write-Host "[4/5] Vibe Kanban (dashboard visual)..." -ForegroundColor Cyan
     Write-Host "  Vibe Kanban se ejecuta con npx (no necesita instalacion global)." -ForegroundColor Green
     Write-Host "  Para usarlo en un proyecto: npx vibe-kanban" -ForegroundColor Gray
+    Write-Host ""
+}
+
+# ============================================================================
+# 5. ORCHESTRATOR DAEMON
+# ============================================================================
+
+if (-not $SkipDaemon) {
+    Write-Host "[5/5] Orchestrator Daemon (orquestacion automatica)..." -ForegroundColor Cyan
+
+    $daemonDir = Join-Path $PSScriptRoot "daemon"
+    $daemonPkg = Join-Path $daemonDir "node_modules"
+
+    if (Test-Path $daemonPkg) {
+        Write-Host "  Ya instalado." -ForegroundColor Green
+    }
+    else {
+        if (Test-Path $daemonDir) {
+            Write-Host "  Instalando dependencias del daemon..." -ForegroundColor Blue
+            Push-Location $daemonDir
+            npm install 2>$null
+            if ($LASTEXITCODE -eq 0) {
+                Write-Host "  Instalado." -ForegroundColor Green
+                Write-Host "  Para modo automatico en un proyecto:" -ForegroundColor Gray
+                Write-Host "    node $daemonDir\orchestrator-daemon.js --project C:\www\mi-proyecto" -ForegroundColor Gray
+            }
+            else {
+                Write-Host "  [!] Error instalando dependencias. Ejecuta manualmente:" -ForegroundColor Yellow
+                Write-Host "      cd $daemonDir && npm install" -ForegroundColor Gray
+            }
+            Pop-Location
+        }
+        else {
+            Write-Host "  [!] Directorio daemon no encontrado." -ForegroundColor Yellow
+        }
+    }
     Write-Host ""
 }
 

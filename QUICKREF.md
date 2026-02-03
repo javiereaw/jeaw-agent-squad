@@ -4,7 +4,7 @@
 
 ```powershell
 cd C:\www\agentes
-.\bootstrap.ps1                  # Instala Beads, gemini-mcp, proxy
+.\bootstrap.ps1                  # Instala Beads, daemon, etc.
 .\bootstrap.ps1 -Status          # Verificar qué hay instalado
 ```
 
@@ -23,22 +23,38 @@ Si el proyecto ya existe o está en otra ruta:
 .\new-project.ps1 -Path "D:\otro-sitio"
 ```
 
-## Actualizar agentes en un proyecto
+## Modo Manual (por defecto)
+
+Abre ventanas y dirige cada agente:
+
+```
+Ventana 1 (Claude):  "Audita este proyecto"
+Ventana 2 (Gemini):  "Crea un sprint plan"
+Ventana 3 (Claude):  "Ejecuta la tarea DEV-001"
+```
+
+## Modo Automático (daemon)
 
 ```powershell
+# Antes: configurar API keys
+$env:ANTHROPIC_API_KEY = "sk-ant-..."
+$env:GEMINI_API_KEY = "..."
+
+# Ejecutar daemon en tu proyecto
 cd C:\www\mi-proyecto
-powershell -ExecutionPolicy Bypass -File C:\www\agentes\install-agents.ps1
-# Elige opción 4
+node C:\www\agentes\daemon\orchestrator-daemon.js
+
+# O especificar proyecto
+node C:\www\agentes\daemon\orchestrator-daemon.js --project C:\www\mi-proyecto
+
+# Dry-run (ver qué haría sin ejecutar)
+node C:\www\agentes\daemon\orchestrator-daemon.js --dry-run
+
+# Ver estado
+node C:\www\agentes\daemon\orchestrator-daemon.js --status
 ```
 
-## Evolucionar el sistema
-
-```powershell
-cd C:\www\agentes
-# Edita los scripts (o pide a Antigravity que lo haga)
-"2.1.0" | Set-Content VERSION -NoNewline
-git add -A && git commit -m "feat: cambio" && git push
-```
+Para detener: `Ctrl+C` o crear archivo `.daemon.stop` en el proyecto.
 
 ## Comandos dentro de un proyecto
 
@@ -59,6 +75,7 @@ git add -A && git commit -m "feat: cambio" && git push
 .agent/rules/     ← 4 reglas de comportamiento
 .claude/skills/   ← symlink → .agent/skills/
 .beads/           ← Task tracker (si activo)
+.daemon.log       ← Log del daemon (si activo)
 ```
 
 ## Quién hace qué (modelo)
@@ -66,4 +83,21 @@ git add -A && git commit -m "feat: cambio" && git push
 ```
 Gemini → auditor, tech-lead, orchestrator, architect, a11y (visión global)
 Claude → developer, security, perf, tester, devops (ejecución precisa)
+```
+
+## Actualizar agentes en un proyecto
+
+```powershell
+cd C:\www\mi-proyecto
+powershell -ExecutionPolicy Bypass -File C:\www\agentes\install-agents.ps1
+# Elige opción 4
+```
+
+## Evolucionar el sistema
+
+```powershell
+cd C:\www\agentes
+# Edita los scripts (o pide a un agente que lo haga)
+"2.1.0" | Set-Content VERSION -NoNewline
+git add -A && git commit -m "feat: cambio" && git push
 ```
