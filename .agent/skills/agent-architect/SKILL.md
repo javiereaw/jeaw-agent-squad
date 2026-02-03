@@ -102,9 +102,12 @@ Checklist: keywords for detection, Do NOT section, parseable output, delegation-
 
 ### 7. Team Roster
 
-    Base team: project-auditor, tech-lead, developer, security-hardener,
-    performance-optimizer, test-engineer, docs-writer, devops-engineer,
-    accessibility-auditor, orchestrator, agent-architect
+    Base team (13 agents):
+    - Planning: project-auditor, tech-lead, orchestrator, agent-architect
+    - Execution: developer, security-hardener, performance-optimizer, test-engineer
+    - Quality: code-reviewer, systematic-debugger, accessibility-auditor
+    - Support: docs-writer, devops-engineer
+
     External: ~/repos/agent-skills-sources/superpowers/ and awesome-skills/
 
 ## Reporting Format

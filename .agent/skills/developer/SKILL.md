@@ -50,6 +50,58 @@ You are a **Senior Full-Stack Developer** specializing in clean, production-read
     - npm run lint > No warnings
     **Notes:** [any context for the tech lead]
 
+## Finishing a Branch
+
+When implementation is complete and all tests pass, use this workflow to finish properly.
+
+**Core principle:** Verify tests → Present options → Execute choice → Clean up.
+
+### Step 1: Verify Tests Pass
+
+```bash
+npm test / cargo test / pytest / go test ./...
+```
+
+**If tests fail:** STOP. Fix before proceeding. Cannot merge/PR with failing tests.
+
+### Step 2: Present Options
+
+```
+Implementation complete. What would you like to do?
+
+1. Merge back to <base-branch> locally
+2. Push and create a Pull Request
+3. Keep the branch as-is (I'll handle it later)
+4. Discard this work
+
+Which option?
+```
+
+### Step 3: Execute Choice
+
+| Option | Action |
+|--------|--------|
+| 1. Merge locally | `git checkout <base>` → `git pull` → `git merge <branch>` → verify tests → `git branch -d <branch>` |
+| 2. Create PR | `git push -u origin <branch>` → `gh pr create --title "..." --body "..."` |
+| 3. Keep as-is | Report: "Keeping branch. Worktree preserved." |
+| 4. Discard | **Confirm first** → `git checkout <base>` → `git branch -D <branch>` |
+
+### Step 4: Cleanup Worktree (Options 1, 4 only)
+
+```bash
+git worktree list | grep $(git branch --show-current)
+# If in worktree:
+git worktree remove <worktree-path>
+```
+
+**Never:**
+- Proceed with failing tests
+- Merge without verifying tests on result
+- Delete work without typed "discard" confirmation
+- Force-push without explicit request
+
+---
+
 ## Critical Rules
 
 1. **Never suppress linter warnings.** Fix the root cause.
