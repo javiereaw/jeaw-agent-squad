@@ -15,7 +15,7 @@ cd C:\www\agentes
 .\new-project.ps1 -Name "nombre-proyecto"
 ```
 
-Crea `C:\www\nombre-proyecto` con 11 agentes + Beads. Listo.
+Crea `C:\www\nombre-proyecto` con 13 agentes + Beads. Listo.
 
 Si el proyecto ya existe o está en otra ruta:
 ```powershell
@@ -71,7 +71,7 @@ Para detener: `Ctrl+C` o crear archivo `.daemon.stop` en el proyecto.
 ## Estructura de cada proyecto
 
 ```
-.agent/skills/    ← 11 agentes (source of truth)
+.agent/skills/    ← 13 agentes (source of truth)
 .agent/rules/     ← 4 reglas de comportamiento
 .claude/skills/   ← symlink → .agent/skills/
 .beads/           ← Task tracker (si activo)
@@ -82,7 +82,8 @@ Para detener: `Ctrl+C` o crear archivo `.daemon.stop` en el proyecto.
 
 ```
 Gemini → auditor, tech-lead, orchestrator, architect, a11y (visión global)
-Claude → developer, security, perf, tester, devops (ejecución precisa)
+Claude → developer, security, perf, tester, devops, debugger (ejecución precisa)
+Ambos  → code-reviewer, docs-writer
 ```
 
 ## Actualizar agentes en un proyecto

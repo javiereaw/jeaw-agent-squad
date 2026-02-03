@@ -4,6 +4,19 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [2.1.0] — 2025-02-03
+
+### Added
+- **Code Reviewer** agent (`code-reviewer`) — Reviews PRs and code with technical rigor, guides how to receive feedback properly
+- **Systematic Debugger** agent (`systematic-debugger`) — Debugging specialist following scientific method, finds root causes before proposing fixes
+
+### Changed
+- Team expanded from 11 to 13 agents
+- Updated all documentation (README, QUICKREF) to reflect new agent count
+- Updated transparency rule examples with new agents
+
+---
+
 ## [2.0.0] — 2025-02-03
 
 ### Added

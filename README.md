@@ -1,6 +1,6 @@
 # 🤖 JEAW Agent Squad
 
-Equipo de 11 agentes IA especializados + infraestructura de convergencia multi-modelo.
+Equipo de 13 agentes IA especializados + infraestructura de convergencia multi-modelo.
 
 Auditan, planifican, construyen, testean, securizan, optimizan, documentan, despliegan, orquestan en paralelo y se auto-mejoran.
 
@@ -26,7 +26,7 @@ cd C:\www\agentes
 .\new-project.ps1 -Name "roi-inmobiliario"
 ```
 
-Crea `C:\www\roi-inmobiliario` con los 11 agentes + Beads inicializado.
+Crea `C:\www\roi-inmobiliario` con los 13 agentes + Beads inicializado.
 
 ### 3. Trabajar
 
@@ -70,7 +70,12 @@ Abre el proyecto en Antigravity o Claude Code y di:
                          │
                   ┌──────┴───────┐
                   │ 🧬 Architect  │  ← Meta-agente: evalúa y evoluciona
-                  └──────────────┘
+                  └──────┬───────┘
+                         │
+        ┌────────────────┴────────────────┐
+  ┌─────┴─────┐                    ┌─────┴─────┐
+  │ 👁️ Reviewer│                    │ 🔬 Debugger│
+  └────────────┘                    └────────────┘
 ```
 
 | Agente | Skill | Función |
@@ -86,6 +91,8 @@ Abre el proyecto en Antigravity o Claude Code y di:
 | ♿ Accessibility Auditor | `accessibility-auditor` | WCAG 2.1 AA, ARIA |
 | 🧬 Agent Architect | `agent-architect` | Evalúa, optimiza, crea agentes |
 | 🎭 Orchestrator | `orchestrator` | Dispatch paralelo con Worktrees |
+| 👁️ Code Reviewer | `code-reviewer` | Revisión de PRs con rigor técnico |
+| 🔬 Systematic Debugger | `systematic-debugger` | Debugging con método científico |
 
 ---
 
@@ -119,7 +126,7 @@ Abre el proyecto en Antigravity o Claude Code y di:
 
 Qué hace:
 1. Crea el directorio si no existe
-2. Instala 11 agentes + 4 reglas (opción 4 del instalador)
+2. Instala 13 agentes + 4 reglas (opción 4 del instalador)
 3. Inicializa Git si no tiene
 4. Inicializa Beads para task tracking
 
@@ -174,7 +181,9 @@ mi-proyecto/
 │       ├── devops-engineer/SKILL.md
 │       ├── accessibility-auditor/SKILL.md
 │       ├── orchestrator/SKILL.md
-│       └── agent-architect/SKILL.md
+│       ├── agent-architect/SKILL.md
+│       ├── code-reviewer/SKILL.md
+│       └── systematic-debugger/SKILL.md
 ├── .claude/                         ← SYMLINK → .agent/
 │   ├── rules/ → .agent/rules/
 │   └── skills/ → .agent/skills/
@@ -284,7 +293,7 @@ Capa opcional que coordina Claude y Gemini trabajando juntos. Sin activarla, los
 
 ```
 ╔═══════════════════════════════════════╗
-║  ROLES — 11 skills (QUÉ hacen)       ║
+║  ROLES — 13 skills (QUÉ hacen)       ║
 ╠═══════════════════════════════════════╣
 ║  INFRA — Beads + Worktrees (CÓMO)    ║
 ╠═══════════════════════════════════════╣
