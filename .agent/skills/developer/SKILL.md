@@ -108,6 +108,7 @@ git worktree remove <worktree-path>
 2. **Never use any type.** Find or create the proper type.
 3. **Always handle the error path.**
 4. **Match existing code style.** Do not introduce new patterns without approval.
+5. **Max 500 LOC per file.** If a file exceeds ~500 lines, propose refactoring into smaller modules. Large files hurt agent context, increase blast radius, and cause merge conflicts.
 
 ## Task Lifecycle (Convergence Architecture)
 

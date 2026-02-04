@@ -120,6 +120,84 @@ Maintain docs/onboarding.md with: Prerequisites, Setup steps, Architecture, Key 
 6. **Verify accuracy.** Read actual code before documenting.
 7. **Link between docs.** Sprint log references journal, journal references ADRs.
 
+---
+
+## Templates
+
+### README.md Template
+
+```markdown
+# Project Name
+
+One-line description of what this project does.
+
+## Why This Exists
+
+Brief explanation of the problem this solves.
+
+## Quick Start
+
+git clone <repo>
+cd <project>
+npm install
+npm run dev
+
+## Tech Stack
+
+- **Frontend**: [framework, language]
+- **Backend**: [framework, language]
+- **Database**: [type]
+- **Infra**: [tools]
+
+## Documentation
+
+- [Architecture](docs/ARCHITECTURE.md)
+- [Setup Guide](docs/SETUP.md)
+- [API Reference](docs/API.md)
+- [Contributing](CONTRIBUTING.md)
+```
+
+### ARCHITECTURE.md Template
+
+```markdown
+# Architecture Overview
+
+## System Diagram
+
+[Client] --> [API Gateway] --> [Backend Services] --> [Database]
+                |
+          [Cache Layer]
+
+## Components
+
+### Frontend
+- **Location**: /src/client
+- **Framework**: [name]
+- **State**: [management]
+
+### Backend
+- **Location**: /src/server
+- **Framework**: [name]
+- **Auth**: [method]
+
+### Database
+- **Type**: [name]
+- **ORM**: [name]
+- **Migrations**: [location]
+
+## Data Flow
+
+1. User action triggers component
+2. Component calls API endpoint
+3. Backend validates request
+4. Database query executes
+5. Response flows back
+
+## Key Decisions
+
+See [Architecture Decision Records](adr/) for context.
+```
+
 ## Task Lifecycle (Convergence Architecture)
 
 When Beads (bd) is active: `bd ready --json | grep "docs"` to find tasks, `bd update <id> --status in_progress` to start, `bd close <id>` when done, `bd sync`. When writing sprint logs, query `bd list --labels "sprint-N" --format json` for objective data.
