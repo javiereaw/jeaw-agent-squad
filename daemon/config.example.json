@@ -36,7 +36,7 @@
   },
   "paths": {
     "skills": ".agent/skills",
-    "rules": ".agent/rules",
+    "agents_md": ".agent/AGENTS.MD",
     "log_file": ".daemon.log"
   },
   "hooks": {

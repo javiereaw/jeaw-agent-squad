@@ -126,14 +126,18 @@ Abre el proyecto en Antigravity o Claude Code y di:
 
 Qué hace:
 1. Crea el directorio si no existe
-2. Instala 13 agentes + 8 reglas (opción 4 del instalador)
+2. Instala AGENTS.MD + 13 skills (opción 4 del instalador)
 3. Inicializa Git si no tiene
 4. Inicializa Beads para task tracking
 
 ### `install-agents.ps1` — Instalador de agentes
 
 ```powershell
+# Desde el repo local
 .\install-agents.ps1          # Menú interactivo (5 opciones)
+
+# Desde cualquier lugar (descarga de GitHub)
+irm https://raw.githubusercontent.com/javiereaw/jeaw-agent-squad/main/install-agents.ps1 | iex
 ```
 
 Para re-instalar/actualizar agentes en un proyecto existente:
@@ -142,6 +146,8 @@ cd C:\www\mi-proyecto
 powershell -ExecutionPolicy Bypass -File C:\www\agentes\install-agents.ps1
 # Elige opción 4
 ```
+
+El instalador descarga siempre la última versión del repositorio.
 
 ### `install-agents.sh` — Instalador Linux/macOS
 
@@ -164,12 +170,7 @@ bash update.sh    # Compara VERSION local vs GitHub, re-instala si hay nueva
 ```
 mi-proyecto/
 ├── .agent/                          ← FUENTE DE VERDAD (canonical)
-│   ├── .version                     ← Versión de agentes instalada
-│   ├── rules/
-│   │   ├── transparency.md          ← Agentes se identifican al responder
-│   │   ├── onboarding.md            ← Detecta proyectos nuevos
-│   │   ├── periodic-evaluation.md   ← Retrospectiva cada 2-3 sprints
-│   │   └── convergence-architecture.md ← Coordinación multi-modelo
+│   ├── AGENTS.MD                    ← Reglas globales + Iron Laws
 │   └── skills/
 │       ├── project-auditor/SKILL.md
 │       ├── tech-lead/SKILL.md
@@ -184,14 +185,13 @@ mi-proyecto/
 │       ├── agent-architect/SKILL.md
 │       ├── code-reviewer/SKILL.md
 │       └── systematic-debugger/SKILL.md
-├── .claude/                         ← SYMLINK → .agent/
-│   ├── rules/ → .agent/rules/
+├── .claude/                         ← SYMLINK
 │   └── skills/ → .agent/skills/
 ├── .beads/                          ← Task tracker (si activo)
 └── tu código...
 ```
 
-Los symlinks sincronizan automáticamente — editar en `.agent/` actualiza `.claude/` sin duplicación.
+El symlink sincroniza automáticamente — editar en `.agent/` actualiza `.claude/` sin duplicación.
 
 ---
 
@@ -349,23 +349,20 @@ Los agentes viven en este repo. Para mejorarlos:
 ```powershell
 cd C:\www\agentes
 
-# 1. Edita install-agents.sh / install-agents.ps1
-#    (o pídele a Antigravity que lo haga)
+# 1. Edita .agent/AGENTS.MD o .agent/skills/*/SKILL.md
+#    (o pídele a un agente que lo haga)
 
-# 2. Bump version
-"2.1.0" | Set-Content VERSION -NoNewline
-
-# 3. Push
+# 2. Push
 git add -A
 git commit -m "feat: descripción del cambio"
 git push
 
-# 4. Re-instalar en proyectos que quieras actualizar
+# 3. Re-instalar en proyectos que quieras actualizar
 cd C:\www\mi-proyecto
 powershell -ExecutionPolicy Bypass -File C:\www\agentes\install-agents.ps1
 ```
 
-El instalador sobreescribe skills y reglas. Tu código, Beads, docs y worktrees nunca se tocan.
+El instalador descarga del repo y sobreescribe AGENTS.MD y skills. Tu código, Beads, docs y worktrees nunca se tocan.
 
 ---
 

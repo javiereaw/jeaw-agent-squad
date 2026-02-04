@@ -71,11 +71,11 @@ Para detener: `Ctrl+C` o crear archivo `.daemon.stop` en el proyecto.
 ## Estructura de cada proyecto
 
 ```
-.agent/skills/    ← 13 agentes (source of truth)
-.agent/rules/     ← 8 reglas de comportamiento
-.claude/skills/   ← symlink → .agent/skills/
-.beads/           ← Task tracker (si activo)
-.daemon.log       ← Log del daemon (si activo)
+.agent/AGENTS.MD    ← Reglas globales + Iron Laws
+.agent/skills/      ← 13 agentes (source of truth)
+.claude/skills/     ← symlink → .agent/skills/
+.beads/             ← Task tracker (si activo)
+.daemon.log         ← Log del daemon (si activo)
 ```
 
 ## Quién hace qué (modelo)

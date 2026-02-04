@@ -24,7 +24,6 @@ node_modules/
 .claude/settings.local.json
 
 # Symlinked directories (avoid duplicates in git)
-# .claude/skills/ and .claude/rules/ are symlinks to .agent/
+# .claude/skills/ is a symlink to .agent/skills/
 # Only track the source (.agent/), not the symlinks
 .claude/skills/
-.claude/rules/

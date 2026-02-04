@@ -53,7 +53,7 @@ const DEFAULT_CONFIG = {
   },
   paths: {
     skills: '.agent/skills',
-    rules: '.agent/rules',
+    agents_md: '.agent/AGENTS.MD',
     log_file: '.daemon.log'
   }
 };
@@ -179,22 +179,15 @@ function loadSkill(agentName) {
   return fs.readFileSync(skillPath, 'utf-8');
 }
 
-function loadRules() {
-  const rulesPath = path.join(projectPath, config.paths.rules);
+function loadAgentsMd() {
+  const agentsMdPath = path.join(projectPath, config.paths.agents_md);
 
-  if (!fs.existsSync(rulesPath)) {
+  if (!fs.existsSync(agentsMdPath)) {
+    logDebug('AGENTS.MD not found', { path: agentsMdPath });
     return '';
   }
 
-  let rules = '';
-  const files = fs.readdirSync(rulesPath).filter(f => f.endsWith('.md'));
-
-  for (const file of files) {
-    const content = fs.readFileSync(path.join(rulesPath, file), 'utf-8');
-    rules += `\n\n## Rule: ${file}\n\n${content}`;
-  }
-
-  return rules;
+  return fs.readFileSync(agentsMdPath, 'utf-8');
 }
 
 function getProjectContext() {
@@ -254,13 +247,13 @@ async function spawnWorker(task) {
   }
 
   // Build prompt
-  const rules = loadRules();
+  const agentsMd = loadAgentsMd();
   const context = getProjectContext();
 
   const prompt = `
 ${skill}
 
-${rules}
+${agentsMd}
 
 ---
 

@@ -4,6 +4,28 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [2.2.0] — 2025-02-04
+
+### Changed
+- **AGENTS.MD consolidation** — All 8 rules merged into single AGENTS.MD file
+  - Iron Laws repeated at START and END for LLM retention (based on "Lost in the Middle" paper)
+  - File under 250 lines for better LLM context handling
+  - Removed `.agent/rules/` directory (no longer needed)
+- **Install scripts rewritten** — Now download from GitHub instead of hardcoded content
+  - `install-agents.ps1` reduced from ~2200 lines to ~200 lines
+  - `install-agents.sh` reduced from ~2800 lines to ~240 lines
+  - Always gets latest version from repository
+- **Daemon updated** — `loadRules()` → `loadAgentsMd()`, paths.rules → paths.agents_md
+- **docs-writer skill** — Added README.md and ARCHITECTURE.md templates
+- **developer skill** — Added 500 LOC per file rule
+- **Code health tools** — Added jscpd + knip recommendations to AGENTS.MD
+
+### Removed
+- `.agent/rules/` directory (8 files consolidated into AGENTS.MD)
+- `.claude/rules/` symlink (no longer needed)
+
+---
+
 ## [2.1.0] — 2025-02-03
 
 ### Added
