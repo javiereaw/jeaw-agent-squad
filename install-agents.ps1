@@ -114,6 +114,23 @@ if ($symlinks.Count -gt 0) {
             New-Item -ItemType Directory -Path $symlinkPath -Force | Out-Null
         }
 
+        # Limpiar symlinks rotos de versiones anteriores (rules/)
+        $oldRulesSymlink = Join-Path $symlinkPath "rules"
+        if (Test-Path $oldRulesSymlink) {
+            $item = Get-Item $oldRulesSymlink -Force -ErrorAction SilentlyContinue
+            if ($item -and ($item.Attributes -band [IO.FileAttributes]::ReparsePoint)) {
+                cmd /c "rmdir `"$oldRulesSymlink`"" 2>$null
+            }
+        }
+
+        # Copiar AGENTS.MD al directorio symlink
+        $canonicalAgentsMd = Join-Path $canonical "AGENTS.MD"
+        $symlinkAgentsMd = Join-Path $symlinkPath "AGENTS.MD"
+        if (Test-Path $canonicalAgentsMd) {
+            Copy-Item $canonicalAgentsMd $symlinkAgentsMd -Force
+            Write-Host "  AGENTS.MD copiado a $symlinkPath" -ForegroundColor Green
+        }
+
         # Symlink para skills/
         $symlinkSkills = Join-Path $symlinkPath "skills"
         $canonicalSkills = Join-Path $canonical "skills"

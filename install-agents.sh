@@ -148,6 +148,18 @@ if [[ ${#SYMLINKS[@]} -gt 0 ]]; then
         # Create parent directory if not exists
         mkdir -p "$SYMLINK_PATH"
 
+        # Remove old rules symlink from previous versions
+        OLD_RULES_SYMLINK="$SYMLINK_PATH/rules"
+        if [[ -L "$OLD_RULES_SYMLINK" ]]; then
+            rm -f "$OLD_RULES_SYMLINK"
+        fi
+
+        # Copy AGENTS.MD to symlink directory
+        if [[ -f "$CANONICAL/AGENTS.MD" ]]; then
+            cp "$CANONICAL/AGENTS.MD" "$SYMLINK_PATH/"
+            echo -e "  ${GREEN}AGENTS.MD copiado a $SYMLINK_PATH${NC}"
+        fi
+
         # Symlink for skills/
         SYMLINK_SKILLS="$SYMLINK_PATH/skills"
         CANONICAL_SKILLS="$CANONICAL/skills"
