@@ -13,7 +13,8 @@
         "security-hardener",
         "performance-optimizer",
         "test-engineer",
-        "devops-engineer"
+        "devops-engineer",
+        "ui-specialist"
       ]
     },
     "gemini": {
@@ -21,11 +22,10 @@
       "model": "gemini-2.0-flash",
       "agents": [
         "project-auditor",
-        "tech-lead",
-        "orchestrator",
+        "lead-agent",
         "agent-architect",
-        "accessibility-auditor",
-        "docs-writer"
+        "docs-writer",
+        "product-owner"
       ]
     }
   },

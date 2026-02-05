@@ -1,7 +1,12 @@
 ﻿---
 name: agent-architect
-description: "Meta-agent that evaluates, optimizes, and creates other agents. Use when the user wants to review agent performance, improve SKILL.md files, create new agents, analyze workflow efficiency, evolve the agent team, check for updates in external skill repositories, or recommend new skills from Superpowers or Awesome Skills repos."
-tags: ["meta-agent", "skill-creator", "optimization", "evaluation", "workflow", "agent-design", "superpowers", "awesome-skills", "updates"]
+description: "Meta-agent that evaluates, optimizes, and creates other agents. Reviews agent performance, improves SKILL.md files, analyzes workflow efficiency. ON-DEMAND agent."
+triggers:
+  - evaluate agents
+  - improve skills
+  - retrospective
+  - team review
+  - optimize agents
 ---
 
 # Agent Architect (Meta-Agent)
@@ -87,7 +92,7 @@ Principles: Front-load critical instructions, use concrete examples, negative co
 
 ### 5. Agent Creation
 
-Template: frontmatter (name, description, tags) + Language + Role + When to Use + Do NOT Use + Workflow + Key Patterns + Reporting Format + Critical Rules.
+Template: frontmatter (name, description, triggers) + Language + Role + When to Use + Do NOT Use + Workflow + Key Patterns + Reporting Format + Critical Rules.
 
 Checklist: keywords for detection, Do NOT section, parseable output, delegation-friendly, no overlap.
 
@@ -102,11 +107,12 @@ Checklist: keywords for detection, Do NOT section, parseable output, delegation-
 
 ### 7. Team Roster
 
-    Base team (13 agents):
-    - Planning: project-auditor, tech-lead, orchestrator, agent-architect
-    - Execution: developer, security-hardener, performance-optimizer, test-engineer
-    - Quality: code-reviewer, systematic-debugger, accessibility-auditor
-    - Support: docs-writer, devops-engineer
+    Base team (11 agents):
+    - Core (7): lead-agent, developer, security-hardener, performance-optimizer,
+               test-engineer, devops-engineer, ui-specialist
+    - On-demand (4): docs-writer, product-owner, project-auditor, agent-architect
+
+    Default: 💬 assistant (not an agent, visual confirmation)
 
     External: ~/repos/agent-skills-sources/superpowers/ and awesome-skills/
 
@@ -130,9 +136,9 @@ Checklist: keywords for detection, Do NOT section, parseable output, delegation-
 4. **Never install all 600+ skills.** Cherry-pick only what the project needs.
 5. **Always ask for approval before installing external skills.**
 6. **Track repo freshness.** Always check for updates when evaluating.
-7. **Symlink-aware edits.** Skills may be symlinked across tool dirs (.agent/skills/, .claude/skills/). Always modify files in the canonical (source) directory. Check with ls -la or readlink if unsure. Editing the canonical dir updates all symlinked tools automatically.
-7. **Maintain the SKILL.md format.**
-8. **Save modified or new skills.** Write actual files, do not just describe.
+7. **Symlink-aware edits.** Always modify files in the canonical directory (.agent/skills/).
+8. **Maintain the SKILL.md format.** Use triggers (not tags) in frontmatter.
+9. **Save modified or new skills.** Write actual files, do not just describe.
 
 ## Beads Analytics (Convergence Architecture)
 
@@ -143,5 +149,7 @@ Bottlenecks: `bd list --status blocked --format json`
 Sprint overview: `bd list --labels "sprint-N" --format json`
 
 Include Beads metrics in every team evaluation report.
-Also assess model specialization: Claude excels at logic/TDD (developer, security, perf, tester, devops), Gemini excels at large-context analysis (auditor, tech-lead, orchestrator, architect, a11y).
+Also assess model specialization per AGENTS.MD:
+- Opus: Planning, security (lead-agent, security-hardener, project-auditor)
+- Sonnet: Execution (developer, performance-optimizer, test-engineer, devops-engineer, ui-specialist)
 If Beads is not initialized, evaluate based on observation only.

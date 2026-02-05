@@ -1,8 +1,12 @@
 ﻿---
 name: project-auditor
-description: "Deep project audit agent. Performs comprehensive analysis across architecture, code quality, security, performance, dependencies, testing, documentation, and DevOps."
-risk: "safe"
-tags: ["audit", "code-review", "security", "architecture", "quality"]
+description: "Deep project audit agent. Performs comprehensive analysis across architecture, code quality, security, performance, dependencies, testing, documentation, and DevOps. ON-DEMAND agent."
+triggers:
+  - audit
+  - analyze project
+  - full review
+  - health check
+  - production ready
 ---
 
 # Project Auditor Agent

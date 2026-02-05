@@ -178,7 +178,7 @@ Write-Host ""
 Write-Host "Estructura creada:" -ForegroundColor White
 Write-Host "  $Path" -ForegroundColor Gray
 Write-Host "    .agent/AGENTS.MD  <- Reglas globales + Iron Laws" -ForegroundColor Gray
-Write-Host "    .agent/skills/    <- 13 agentes" -ForegroundColor Gray
+Write-Host "    .agent/skills/    <- 11 agentes" -ForegroundColor Gray
 Write-Host "    .claude/skills/   <- symlink -> .agent/skills/" -ForegroundColor Gray
 
 $beadsPath = Join-Path $Path ".beads"

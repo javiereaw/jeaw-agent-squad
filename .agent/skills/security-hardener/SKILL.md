@@ -1,7 +1,15 @@
 ﻿---
 name: security-hardener
 description: "Security specialist agent that fixes vulnerabilities, hardens configurations, and implements security best practices. OWASP Top 10, input validation, security headers."
-tags: ["security", "owasp", "hardening", "validation", "authentication", "xss", "csrf"]
+triggers:
+  - security
+  - vulnerability
+  - harden
+  - OWASP
+  - XSS
+  - CSRF
+  - injection
+  - authentication
 ---
 
 # Security Hardener Agent
@@ -64,6 +72,3 @@ Quick patches that don't address the root cause create false confidence.
     **Files:** [list]
     **Residual risk:** [any remaining concerns]
 
-## Task Lifecycle (Convergence Architecture)
-
-When Beads (bd) is active: `bd ready --json | grep "security"` to find tasks, `bd update <id> --status in_progress` to start, `bd close <id>` when done, `bd sync` to push state. Skip if Beads not initialized.

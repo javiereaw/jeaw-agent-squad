@@ -38,12 +38,12 @@ const DEFAULT_CONFIG = {
       api_key_env: 'ANTHROPIC_API_KEY',
       model: 'claude-sonnet-4-20250514',
       max_tokens: 8192,
-      agents: ['developer', 'security-hardener', 'performance-optimizer', 'test-engineer', 'devops-engineer']
+      agents: ['developer', 'security-hardener', 'performance-optimizer', 'test-engineer', 'devops-engineer', 'ui-specialist']
     },
     gemini: {
       api_key_env: 'GEMINI_API_KEY',
       model: 'gemini-2.0-flash',
-      agents: ['project-auditor', 'tech-lead', 'orchestrator', 'agent-architect', 'accessibility-auditor', 'docs-writer']
+      agents: ['project-auditor', 'lead-agent', 'agent-architect', 'docs-writer', 'product-owner']
     }
   },
   beads: {

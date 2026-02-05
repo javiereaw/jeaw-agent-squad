@@ -19,27 +19,36 @@
 
 ## Agent Registry
 
+### Default (Sin skill específico)
+| Emoji | Identifier | Uso |
+|-------|------------|-----|
+| 💬 | assistant | Respuestas generales, confirmación del sistema activo |
+
+### Core Agents (7 - Siempre disponibles)
 | Emoji | Agent | Triggers |
 |-------|-------|----------|
-| 🔍 | project-auditor | audit, review, analyze project |
-| 🎯 | tech-lead | plan, sprint, prioritize, delegate |
-| 💻 | developer | implement, fix, code, build, refactor |
+| 🎯 | lead-agent | plan, sprint, prioritize, delegate, coordinate, parallel |
+| 💻 | developer | implement, fix, code, build, refactor, debug, review |
 | 🔒 | security-hardener | security, vulnerability, harden, OWASP |
 | ⚡ | performance-optimizer | performance, slow, optimize, latency |
 | 🧪 | test-engineer | test, coverage, unit test, e2e, TDD |
-| 📝 | docs-writer | document, readme, changelog, ADR |
 | 🚀 | devops-engineer | deploy, CI/CD, docker, pipeline |
-| ♿ | accessibility-auditor | accessibility, a11y, WCAG, ARIA |
-| 🎭 | orchestrator | parallel, dispatch, waves |
-| 🧬 | agent-architect | evaluate agents, improve skills |
-| 👁️ | code-reviewer | PR review, code review |
-| 🔬 | systematic-debugger | bug, debug, error, failing, broken |
+| 🎨 | ui-specialist | frontend, UI, UX, design, responsive, accessibility, a11y |
+
+### On-Demand Agents (4 - Cuando se invocan)
+| Emoji | Agent | Triggers |
+|-------|-------|----------|
+| 📝 | docs-writer | document, readme, changelog, ADR |
+| 🎭 | product-owner | requirements, MVP, user story, acceptance criteria |
+| 🔍 | project-auditor | audit, analyze project, full review |
+| 🧬 | agent-architect | evaluate agents, improve skills, retrospective |
 
 **Activation workflow:**
 1. Detect task type from keywords
 2. Read `.agent/skills/{agent}/SKILL.md`
 3. Follow skill instructions exactly
 4. Start response: `[emoji agent-name] -- reason`
+5. If no specific skill matches: respond as 💬 assistant
 
 ---
 
@@ -121,9 +130,10 @@ Check if active:
 - Beads: `[ -d ".beads" ] && command -v bd`
 - Worktrees: `git worktree list`
 
-**Model specialization:**
-- Claude: Execution agents (developer, security, perf, tester, devops)
-- Gemini: Planning + audit agents (auditor, tech-lead, orchestrator, architect)
+**Model specialization (when enabled):**
+- Opus: Planning, security review (lead-agent, security-hardener, project-auditor)
+- Sonnet: Execution (developer, performance-optimizer, test-engineer, devops-engineer, ui-specialist)
+- Gemini (disabled by default): Can be enabled for planning agents
 
 All convergence features are optional - fall back to standard behavior if not configured.
 
@@ -152,26 +162,32 @@ git worktree list
 git worktree remove .trees/feature-auth
 ```
 
-### Parallel Workflow
+### Parallel Workflow (Conditional)
+
+Worktrees solo se usan cuando lead-agent detecta riesgo de conflicto entre tareas.
 
 ```
-1. Orchestrator creates worktrees:
+1. Lead-agent analiza tareas y decide:
+   - Sin conflicto → mismo directorio
+   - Con conflicto → crear worktrees
+
+2. Si worktrees necesarios:
    .trees/wave1-developer/   → feature/login
    .trees/wave1-tester/      → feature/login-tests
    .trees/wave1-docs/        → feature/login-docs
 
-2. Each agent works in isolation:
+3. Each agent works in isolation:
    cd .trees/wave1-developer && claude
    cd .trees/wave1-tester && claude
    cd .trees/wave1-docs && claude
 
-3. Merge when complete:
+4. Merge when complete:
    git checkout main
    git merge feature/login
    git merge feature/login-tests
    git merge feature/login-docs
 
-4. Cleanup:
+5. Cleanup:
    git worktree remove .trees/wave1-developer
    git worktree remove .trees/wave1-tester
    git worktree remove .trees/wave1-docs
@@ -182,7 +198,7 @@ git worktree remove .trees/feature-auth
 - **Stay in your worktree** - never modify files outside it
 - **One branch per worktree** - don't switch branches
 - **Commit before stopping** - preserve work state
-- **Signal completion** - use Beads or report to orchestrator
+- **Signal completion** - use Beads or report to lead-agent
 
 ---
 

@@ -1,7 +1,7 @@
 <#
 .SYNOPSIS
     JEAW Agent Squad - Installer
-    Instala el equipo de 13 agentes especializados desde GitHub
+    Instala el equipo de 11 agentes especializados (7 core + 4 on-demand) desde GitHub
 .DESCRIPTION
     Descarga la última versión del repositorio y configura los agentes.
     Compatible con: Claude Code, Antigravity, Gemini CLI, Cursor, Codex
@@ -97,7 +97,7 @@ if (Test-Path $sourceSkills) {
         Remove-Item $destSkills -Recurse -Force
     }
     Copy-Item $sourceSkills $destSkills -Recurse
-    Write-Host "  skills/ copiado (13 agentes)" -ForegroundColor Green
+    Write-Host "  skills/ copiado (11 agentes)" -ForegroundColor Green
 }
 
 # ============================================================================
@@ -199,7 +199,7 @@ Write-Host ""
 Write-Host "Estructura instalada:" -ForegroundColor White
 Write-Host "  $canonical" -ForegroundColor Cyan
 Write-Host "    AGENTS.MD        <- Reglas globales + Iron Laws" -ForegroundColor Gray
-Write-Host "    skills/          <- 13 agentes especializados" -ForegroundColor Gray
+Write-Host "    skills/          <- 11 agentes especializados" -ForegroundColor Gray
 
 if ($symlinks.Count -gt 0) {
     Write-Host ""
@@ -211,10 +211,9 @@ if ($symlinks.Count -gt 0) {
 
 Write-Host ""
 Write-Host "Agentes disponibles:" -ForegroundColor White
-Write-Host "  project-auditor, tech-lead, developer, security-hardener," -ForegroundColor Gray
-Write-Host "  performance-optimizer, test-engineer, docs-writer, devops-engineer," -ForegroundColor Gray
-Write-Host "  accessibility-auditor, orchestrator, agent-architect," -ForegroundColor Gray
-Write-Host "  code-reviewer, systematic-debugger" -ForegroundColor Gray
+Write-Host "  Core (7): lead-agent, developer, security-hardener," -ForegroundColor Gray
+Write-Host "            performance-optimizer, test-engineer, devops-engineer, ui-specialist" -ForegroundColor Gray
+Write-Host "  On-demand (4): project-auditor, docs-writer, product-owner, agent-architect" -ForegroundColor Gray
 Write-Host ""
 Write-Host "Para actualizar en el futuro, vuelve a ejecutar este script." -ForegroundColor Yellow
 Write-Host ""

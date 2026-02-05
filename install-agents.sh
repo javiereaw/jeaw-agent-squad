@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 # JEAW Agent Squad - Installer
-# Instala el equipo de 13 agentes especializados desde GitHub
+# Instala el equipo de 11 agentes especializados (7 core + 4 on-demand) desde GitHub
 #
 # Compatible con: Claude Code, Antigravity, Gemini CLI, Cursor, Codex
 #
@@ -133,7 +133,7 @@ fi
 if [[ -d "$TEMP_DIR/.agent/skills" ]]; then
     rm -rf "$CANONICAL/skills"
     cp -r "$TEMP_DIR/.agent/skills" "$CANONICAL/"
-    echo -e "  ${GREEN}skills/ copiado (13 agentes)${NC}"
+    echo -e "  ${GREEN}skills/ copiado (11 agentes)${NC}"
 fi
 
 # ============================================================================
@@ -228,7 +228,7 @@ echo ""
 echo -e "${NC}Estructura instalada:${NC}"
 echo -e "  ${CYAN}$CANONICAL${NC}"
 echo -e "    ${GRAY}AGENTS.MD        <- Reglas globales + Iron Laws${NC}"
-echo -e "    ${GRAY}skills/          <- 13 agentes especializados${NC}"
+echo -e "    ${GRAY}skills/          <- 11 agentes especializados${NC}"
 
 if [[ ${#SYMLINKS[@]} -gt 0 ]]; then
     echo ""
@@ -240,10 +240,9 @@ fi
 
 echo ""
 echo -e "${NC}Agentes disponibles:${NC}"
-echo -e "  ${GRAY}project-auditor, tech-lead, developer, security-hardener,${NC}"
-echo -e "  ${GRAY}performance-optimizer, test-engineer, docs-writer, devops-engineer,${NC}"
-echo -e "  ${GRAY}accessibility-auditor, orchestrator, agent-architect,${NC}"
-echo -e "  ${GRAY}code-reviewer, systematic-debugger${NC}"
+echo -e "  ${GRAY}Core (7): lead-agent, developer, security-hardener,${NC}"
+echo -e "  ${GRAY}          performance-optimizer, test-engineer, devops-engineer, ui-specialist${NC}"
+echo -e "  ${GRAY}On-demand (4): project-auditor, docs-writer, product-owner, agent-architect${NC}"
 echo ""
 echo -e "${YELLOW}Para actualizar en el futuro, vuelve a ejecutar este script.${NC}"
 echo ""

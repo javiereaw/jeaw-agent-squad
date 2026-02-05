@@ -1,7 +1,13 @@
 ﻿---
 name: performance-optimizer
 description: "Performance optimization specialist. Handles database queries, bundle size, caching, virtualization, React renders, lazy loading, Core Web Vitals."
-tags: ["performance", "optimization", "caching", "virtualization", "bundle-size", "react"]
+triggers:
+  - performance
+  - slow
+  - optimize
+  - latency
+  - bundle size
+  - caching
 ---
 
 # Performance Optimizer Agent
@@ -53,6 +59,3 @@ Premature optimization is the root of all evil. Unmeasured optimization is guess
     **Fix:** [what changed]
     **Trade-offs:** [any downsides]
 
-## Task Lifecycle (Convergence Architecture)
-
-When Beads (bd) is active: `bd ready --json | grep "performance"` to find tasks, `bd update <id> --status in_progress` to start, `bd close <id>` when done, `bd sync`. Skip if Beads not initialized.

@@ -1,8 +1,8 @@
 # 🤖 JEAW Agent Squad
 
-Equipo de 13 agentes IA especializados + infraestructura de convergencia multi-modelo.
+Equipo de 11 agentes IA especializados (7 core + 4 on-demand) + infraestructura de convergencia multi-modelo.
 
-Auditan, planifican, construyen, testean, securizan, optimizan, documentan, despliegan, orquestan en paralelo y se auto-mejoran.
+Auditan, planifican, construyen, testean, securizan, optimizan, documentan, despliegan, coordinan en paralelo y evolucionan.
 
 Funciona con cualquier proyecto, cualquier stack, cualquier idioma.
 
@@ -26,7 +26,7 @@ cd C:\www\agentes
 .\new-project.ps1 -Name "roi-inmobiliario"
 ```
 
-Crea `C:\www\roi-inmobiliario` con los 13 agentes + Beads inicializado.
+Crea `C:\www\roi-inmobiliario` con los 11 agentes + Beads inicializado.
 
 ### 3. Trabajar
 
@@ -44,55 +44,52 @@ Abre el proyecto en Antigravity o Claude Code y di:
 ## El Equipo
 
 ```
-                       TÚ (CEO)
-                         ↓
-                  ┌──────────────┐
-                  │  🎯 Tech Lead │  ← Planifica sprints, delega
-                  └──────┬───────┘
-                         │
-                  ┌──────┴───────┐
-                  │ 🎭 Orchestrator│  ← Dispatch paralelo en waves
-                  └──────┬───────┘
-                         │
-        ┌────────────────┼────────────────┐
-        │                │                │
-  ┌─────┴─────┐   ┌─────┴─────┐   ┌─────┴─────┐
-  │ 🔍 Auditor │   │ 💻 Developer│   │ 🔒 Security │
-  └────────────┘   └────────────┘   └────────────┘
-        │                │                │
-  ┌─────┴─────┐   ┌─────┴─────┐   ┌─────┴─────┐
-  │ ⚡ Perf    │   │ 🧪 Tester  │   │ 📝 Docs    │
-  └────────────┘   └────────────┘   └────────────┘
-        │                │
-  ┌─────┴─────┐   ┌─────┴─────┐
-  │ 🚀 DevOps  │   │ ♿ A11y    │
-  └────────────┘   └────────────┘
-                         │
-                  ┌──────┴───────┐
-                  │ 🧬 Architect  │  ← Meta-agente: evalúa y evoluciona
-                  └──────┬───────┘
-                         │
-        ┌────────────────┴────────────────┐
-  ┌─────┴─────┐                    ┌─────┴─────┐
-  │ 👁️ Reviewer│                    │ 🔬 Debugger│
-  └────────────┘                    └────────────┘
+                            TÚ (CEO)
+                               ↓
+                        ┌─────────────┐
+                        │ 🎯 Lead Agent│  ← Planifica + coordina
+                        └──────┬──────┘
+                               │
+      ┌────────────────────────┼────────────────────────┐
+      │                        │                        │
+┌─────┴─────┐           ┌─────┴─────┐           ┌─────┴─────┐
+│💻 Developer│           │🔒 Security │           │⚡ Perf     │
+│  +Debug   │           │  Hardener │           │ Optimizer │
+│  +Review  │           └───────────┘           └───────────┘
+└───────────┘
+      │
+┌─────┴─────┐           ┌───────────┐           ┌───────────┐
+│🧪 Test     │           │🚀 DevOps  │           │🎨 UI       │
+│  Engineer │           │  Engineer │           │Specialist │
+└───────────┘           └───────────┘           └───────────┘
+
+─────────────────── ON-DEMAND ───────────────────
+┌───────────┐  ┌───────────┐  ┌───────────┐  ┌───────────┐
+│🔍 Auditor │  │📝 Docs    │  │🎭 Product │  │🧬 Agent   │
+│           │  │  Writer  │  │  Owner   │  │ Architect │
+└───────────┘  └───────────┘  └───────────┘  └───────────┘
 ```
+
+### Core (7 agentes - Siempre disponibles)
+
+| Agente | Skill | Función |
+|--------|-------|---------|
+| 🎯 Lead Agent | `lead-agent` | Planificación + coordinación (fusión tech-lead + orchestrator) |
+| 💻 Developer | `developer` | Implementación, debug mode, review mode |
+| 🔒 Security Hardener | `security-hardener` | OWASP, validación, headers |
+| ⚡ Performance Optimizer | `performance-optimizer` | Queries, caching, bundle size |
+| 🧪 Test Engineer | `test-engineer` | Tests unitarios, integración, e2e, TDD |
+| 🚀 DevOps Engineer | `devops-engineer` | CI/CD, Docker, dev observability |
+| 🎨 UI Specialist | `ui-specialist` | Frontend + UX + Accesibilidad (WCAG 2.1 AA) |
+
+### On-Demand (4 agentes - Cuando se invocan)
 
 | Agente | Skill | Función |
 |--------|-------|---------|
 | 🔍 Project Auditor | `project-auditor` | Auditoría profunda en 8 dimensiones |
-| 🎯 Tech Lead | `tech-lead` | Planificación de sprints, delegación, Beads |
-| 💻 Developer | `developer` | Implementación, refactoring, bug fixes |
-| 🔒 Security Hardener | `security-hardener` | OWASP, validación, headers |
-| ⚡ Performance Optimizer | `performance-optimizer` | Queries, caching, bundle size |
-| 🧪 Test Engineer | `test-engineer` | Tests unitarios, integración, e2e |
 | 📝 Docs Writer | `docs-writer` | README, ADRs, sprint logs, journal |
-| 🚀 DevOps Engineer | `devops-engineer` | CI/CD, Docker, dev observability |
-| ♿ Accessibility Auditor | `accessibility-auditor` | WCAG 2.1 AA, ARIA |
+| 🎭 Product Owner | `product-owner` | Requirements, MVP, user stories |
 | 🧬 Agent Architect | `agent-architect` | Evalúa, optimiza, crea agentes |
-| 🎭 Orchestrator | `orchestrator` | Dispatch paralelo con Worktrees |
-| 👁️ Code Reviewer | `code-reviewer` | Revisión de PRs con rigor técnico |
-| 🔬 Systematic Debugger | `systematic-debugger` | Debugging con método científico |
 
 ---
 
@@ -126,7 +123,7 @@ Abre el proyecto en Antigravity o Claude Code y di:
 
 Qué hace:
 1. Crea el directorio si no existe
-2. Instala AGENTS.MD + 13 skills (opción 4 del instalador)
+2. Instala AGENTS.MD + 11 skills (opción 4 del instalador)
 3. Inicializa Git si no tiene
 4. Inicializa Beads para task tracking
 
@@ -172,19 +169,17 @@ mi-proyecto/
 ├── .agent/                          ← FUENTE DE VERDAD (canonical)
 │   ├── AGENTS.MD                    ← Reglas globales + Iron Laws
 │   └── skills/
-│       ├── project-auditor/SKILL.md
-│       ├── tech-lead/SKILL.md
+│       ├── lead-agent/SKILL.md      ← Core (7)
 │       ├── developer/SKILL.md
 │       ├── security-hardener/SKILL.md
 │       ├── performance-optimizer/SKILL.md
 │       ├── test-engineer/SKILL.md
-│       ├── docs-writer/SKILL.md
 │       ├── devops-engineer/SKILL.md
-│       ├── accessibility-auditor/SKILL.md
-│       ├── orchestrator/SKILL.md
-│       ├── agent-architect/SKILL.md
-│       ├── code-reviewer/SKILL.md
-│       └── systematic-debugger/SKILL.md
+│       ├── ui-specialist/SKILL.md
+│       ├── project-auditor/SKILL.md ← On-demand (4)
+│       ├── docs-writer/SKILL.md
+│       ├── product-owner/SKILL.md
+│       └── agent-architect/SKILL.md
 ├── .claude/                         ← SYMLINK
 │   └── skills/ → .agent/skills/
 ├── .beads/                          ← Task tracker (si activo)
@@ -293,7 +288,7 @@ Capa opcional que coordina Claude y Gemini trabajando juntos. Sin activarla, los
 
 ```
 ╔═══════════════════════════════════════╗
-║  ROLES — 13 skills (QUÉ hacen)       ║
+║  ROLES — 11 skills (QUÉ hacen)       ║
 ╠═══════════════════════════════════════╣
 ║  INFRA — Beads + Worktrees (CÓMO)    ║
 ╠═══════════════════════════════════════╣
@@ -305,19 +300,19 @@ Capa opcional que coordina Claude y Gemini trabajando juntos. Sin activarla, los
 
 | Modelo | Agentes | Por qué |
 |--------|---------|---------|
-| **Gemini** | auditor, tech-lead, orchestrator, architect, a11y | Contexto 1M tokens, visión global |
-| **Claude** | developer, security, perf, tester, devops | Lógica precisa, TDD, refactoring |
-| **Cualquiera** | docs-writer | Ambos documentan bien |
+| **Opus** | lead-agent, security-hardener, project-auditor | Planning, seguridad, visión global |
+| **Sonnet** | developer, perf, tester, devops, ui-specialist | Ejecución precisa, TDD, refactoring |
+| **Cualquiera** | docs-writer, product-owner, agent-architect | Flexibles |
 
 ### Beads como nexo
 
 Beads es el tracker de tareas que conecta a los agentes entre sí:
 
 ```
-Tech Lead (Gemini) → bd create → tareas registradas
-Orchestrator (Gemini) → bd ready → asigna waves
-Developer (Claude) → bd update → trabaja → bd close
-Architect (Gemini) → bd list --status closed → métricas
+Lead Agent → bd create → tareas registradas
+Lead Agent → bd ready → asigna waves
+Developer → bd update → trabaja → bd close
+Agent Architect → bd list --status closed → métricas
 ```
 
 Sin Beads, cada agente trabaja aislado. Con Beads, comparten estado.

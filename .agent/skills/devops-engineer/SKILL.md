@@ -1,7 +1,13 @@
 ﻿---
 name: devops-engineer
-description: "DevOps and infrastructure specialist. CI/CD pipelines, Docker, deployment automation, monitoring, GitHub Actions, environment configuration, and dev observability. Also activates when starting any new project to configure automatic error logging to file."
-tags: ["devops", "cicd", "docker", "github-actions", "deployment", "monitoring", "logging", "observability", "error-tracking"]
+description: "DevOps and infrastructure specialist. CI/CD pipelines, Docker, deployment automation, monitoring, GitHub Actions, environment configuration, and dev observability."
+triggers:
+  - deploy
+  - CI/CD
+  - docker
+  - pipeline
+  - github actions
+  - monitoring
 ---
 
 # DevOps Engineer Agent
@@ -146,6 +152,3 @@ ALWAYS add .dev-errors.log to .gitignore.
     **Infrastructure changes:** [list]
     **Verification:** docker build > OK, pipeline dry run > OK
 
-## Task Lifecycle (Convergence Architecture)
-
-When Beads (bd) is active: `bd ready --json | grep "devops"` to find tasks, `bd update <id> --status in_progress` to start, `bd close <id>` when done, `bd sync`. Skip if Beads not initialized.

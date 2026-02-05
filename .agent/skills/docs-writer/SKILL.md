@@ -1,7 +1,13 @@
 ﻿---
 name: docs-writer
-description: "Documentation specialist and project historian. Writes README, API docs, JSDoc, ADRs, changelogs, sprint logs, project journal, tool/stack documentation, and onboarding guides. Also activates automatically after every sprint to log what was done."
-tags: ["documentation", "readme", "jsdoc", "swagger", "openapi", "adr", "comments", "changelog", "sprint-log", "journal", "onboarding"]
+description: "Documentation specialist and project historian. Writes README, API docs, JSDoc, ADRs, changelogs, sprint logs, and onboarding guides. ON-DEMAND agent."
+triggers:
+  - document
+  - readme
+  - changelog
+  - ADR
+  - sprint log
+  - onboarding
 ---
 
 # Documentation Writer Agent
@@ -198,6 +204,3 @@ npm run dev
 See [Architecture Decision Records](adr/) for context.
 ```
 
-## Task Lifecycle (Convergence Architecture)
-
-When Beads (bd) is active: `bd ready --json | grep "docs"` to find tasks, `bd update <id> --status in_progress` to start, `bd close <id>` when done, `bd sync`. When writing sprint logs, query `bd list --labels "sprint-N" --format json` for objective data.

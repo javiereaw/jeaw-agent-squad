@@ -4,6 +4,41 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [3.0.0] — 2026-02-05
+
+### Changed
+- **Major architecture restructure: 13 → 11 agents (7 core + 4 on-demand)**
+  - **Fusions:**
+    - `tech-lead` + `orchestrator` → `lead-agent` (planning + coordination unified)
+    - `code-reviewer` + `systematic-debugger` → modes within `developer` (Debug Mode, Review Mode)
+    - `accessibility-auditor` + frontend concerns → `ui-specialist` (frontend + UX + a11y)
+  - **New agents:**
+    - `lead-agent` — Unified planning and orchestration
+    - `ui-specialist` — Frontend, UX, and accessibility (WCAG 2.1 AA)
+    - `product-owner` — Requirements clarification, MVP definition (on-demand)
+  - **Archived agents:**
+    - `tech-lead`, `orchestrator`, `code-reviewer`, `systematic-debugger`, `accessibility-auditor`
+- **Progressive disclosure:** SKILL.md files now < 500 LOC with `references/` for detailed guides
+- **Model specialization updated:**
+  - Opus: lead-agent, security-hardener, project-auditor (planning, security)
+  - Sonnet: developer, performance-optimizer, test-engineer, devops-engineer, ui-specialist (execution)
+- **Developer agent:** Now has 3 modes (Implementation, Debug, Review) with references
+- **YAML frontmatter:** All skills now use `triggers` (not `tags`) for activation
+
+### Added
+- `references/debugging-guide.md` — Extracted from systematic-debugger
+- `references/code-review-checklist.md` — Extracted from code-reviewer
+- `references/planning-guide.md` — Extracted from tech-lead + orchestrator
+- `references/web-design-guide.md` — Anti-AI-slop design philosophy
+- `references/accessibility-guide.md` — WCAG 2.1 AA complete reference
+- `.agent/archive/` — Archived agents preserved for reference
+
+### Removed
+- Redundant "Task Lifecycle" sections from 6 skills (790 lines total)
+- Old agents moved to archive (not deleted)
+
+---
+
 ## [2.2.0] — 2025-02-04
 
 ### Changed

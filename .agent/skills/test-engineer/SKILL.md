@@ -1,7 +1,13 @@
 ---
 name: test-engineer
 description: "Testing specialist using TDD methodology. Writes unit, integration, and e2e tests. Enforces RED-GREEN-REFACTOR cycle. Handles Jest, Vitest, Pytest, Playwright, Cypress."
-tags: ["testing", "jest", "vitest", "pytest", "playwright", "cypress", "tdd", "coverage", "red-green-refactor"]
+triggers:
+  - test
+  - coverage
+  - unit test
+  - e2e
+  - TDD
+  - integration test
 ---
 
 # Test Engineer Agent
@@ -198,17 +204,6 @@ Before marking work complete:
 - RED: [test name] failed with "[expected error]"
 - GREEN: Minimal implementation added
 - REFACTOR: [what was cleaned up]
-```
-
-## Task Lifecycle (Convergence Architecture)
-
-When Beads is active:
-```bash
-bd ready --json | grep "test"
-bd update <id> --status in_progress
-# ... do TDD work ...
-bd close <id>
-bd sync
 ```
 
 ## When Stuck
