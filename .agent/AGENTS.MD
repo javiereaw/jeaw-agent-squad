@@ -50,6 +50,12 @@
 4. Start response: `[emoji agent-name] -- reason`
 5. If no specific skill matches: respond as 💬 assistant
 
+**Disambiguation:**
+- "fix" → 💻 developer (general bugs)
+- "fix vulnerability/security/OWASP" → 🔒 security-hardener
+- "fix slow/performance" → ⚡ performance-optimizer
+- "fix test/failing test" → 🧪 test-engineer
+
 ---
 
 ## Verification Protocol
