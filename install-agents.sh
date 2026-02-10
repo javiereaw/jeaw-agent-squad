@@ -137,6 +137,29 @@ if [[ -d "$TEMP_DIR/.agent/skills" ]]; then
 fi
 
 # ============================================================================
+# Create CLAUDE.md symlink (Claude Code reads this file)
+# ============================================================================
+
+if [[ "$OPTION" == "4" ]]; then
+    PROJECT_ROOT="$(pwd)"
+    CLAUDE_MD="$PROJECT_ROOT/CLAUDE.md"
+
+    echo ""
+    echo -e "${CYAN}Creando CLAUDE.md symlink...${NC}"
+
+    # Remove existing CLAUDE.md (file, symlink, or broken link)
+    if [[ -L "$CLAUDE_MD" ]] || [[ -f "$CLAUDE_MD" ]]; then
+        rm -f "$CLAUDE_MD"
+    fi
+
+    # Create symlink: CLAUDE.md → .agent/AGENTS.MD
+    ln -s ".agent/AGENTS.MD" "$CLAUDE_MD" 2>/dev/null || \
+        cp "$CANONICAL/AGENTS.MD" "$CLAUDE_MD"
+
+    echo -e "  ${GREEN}CLAUDE.md -> .agent/AGENTS.MD${NC}"
+fi
+
+# ============================================================================
 # Create symlinks
 # ============================================================================
 
@@ -152,12 +175,6 @@ if [[ ${#SYMLINKS[@]} -gt 0 ]]; then
         OLD_RULES_SYMLINK="$SYMLINK_PATH/rules"
         if [[ -L "$OLD_RULES_SYMLINK" ]]; then
             rm -f "$OLD_RULES_SYMLINK"
-        fi
-
-        # Copy AGENTS.MD to symlink directory
-        if [[ -f "$CANONICAL/AGENTS.MD" ]]; then
-            cp "$CANONICAL/AGENTS.MD" "$SYMLINK_PATH/"
-            echo -e "  ${GREEN}AGENTS.MD copiado a $SYMLINK_PATH${NC}"
         fi
 
         # Symlink for skills/
@@ -229,6 +246,12 @@ echo -e "${NC}Estructura instalada:${NC}"
 echo -e "  ${CYAN}$CANONICAL${NC}"
 echo -e "    ${GRAY}AGENTS.MD        <- Reglas globales + Iron Laws${NC}"
 echo -e "    ${GRAY}skills/          <- 11 agentes especializados${NC}"
+
+if [[ "$OPTION" == "4" ]]; then
+    echo ""
+    echo -e "${NC}Claude Code:${NC}"
+    echo -e "  ${CYAN}CLAUDE.md -> .agent/AGENTS.MD${NC} ${GRAY}(auto-loaded by Claude Code)${NC}"
+fi
 
 if [[ ${#SYMLINKS[@]} -gt 0 ]]; then
     echo ""

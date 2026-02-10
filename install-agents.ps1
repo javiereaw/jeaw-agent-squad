@@ -101,6 +101,39 @@ if (Test-Path $sourceSkills) {
 }
 
 # ============================================================================
+# Crear CLAUDE.md symlink (Claude Code lee este archivo)
+# ============================================================================
+
+if ($option -eq "4") {
+    $projectRoot = Get-Location
+    $claudeMd = Join-Path $projectRoot "CLAUDE.md"
+    $agentsMd = Join-Path $projectRoot ".agent\AGENTS.MD"
+
+    Write-Host ""
+    Write-Host "Creando CLAUDE.md symlink..." -ForegroundColor Cyan
+
+    # Eliminar CLAUDE.md existente (archivo o symlink)
+    if (Test-Path $claudeMd) {
+        $item = Get-Item $claudeMd -Force -ErrorAction SilentlyContinue
+        if ($item -and ($item.Attributes -band [IO.FileAttributes]::ReparsePoint)) {
+            cmd /c "del `"$claudeMd`"" 2>$null
+        } else {
+            Remove-Item $claudeMd -Force
+        }
+    }
+
+    # Crear symlink: CLAUDE.md → .agent\AGENTS.MD (relativo al proyecto)
+    $mkResult = cmd /c "mklink `"$claudeMd`" .agent\AGENTS.MD" 2>&1
+    if ($LASTEXITCODE -eq 0) {
+        Write-Host "  CLAUDE.md -> .agent\AGENTS.MD (symlink)" -ForegroundColor Green
+    } else {
+        # Fallback: copiar si no se puede crear symlink
+        Copy-Item $agentsMd $claudeMd -Force
+        Write-Host "  CLAUDE.md copiado (symlink no disponible, ejecuta como admin)" -ForegroundColor Yellow
+    }
+}
+
+# ============================================================================
 # Crear symlinks
 # ============================================================================
 
@@ -121,14 +154,6 @@ if ($symlinks.Count -gt 0) {
             if ($item -and ($item.Attributes -band [IO.FileAttributes]::ReparsePoint)) {
                 cmd /c "rmdir `"$oldRulesSymlink`"" 2>$null
             }
-        }
-
-        # Copiar AGENTS.MD al directorio symlink
-        $canonicalAgentsMd = Join-Path $canonical "AGENTS.MD"
-        $symlinkAgentsMd = Join-Path $symlinkPath "AGENTS.MD"
-        if (Test-Path $canonicalAgentsMd) {
-            Copy-Item $canonicalAgentsMd $symlinkAgentsMd -Force
-            Write-Host "  AGENTS.MD copiado a $symlinkPath" -ForegroundColor Green
         }
 
         # Symlink para skills/
@@ -200,6 +225,13 @@ Write-Host "Estructura instalada:" -ForegroundColor White
 Write-Host "  $canonical" -ForegroundColor Cyan
 Write-Host "    AGENTS.MD        <- Reglas globales + Iron Laws" -ForegroundColor Gray
 Write-Host "    skills/          <- 11 agentes especializados" -ForegroundColor Gray
+
+if ($option -eq "4") {
+    Write-Host ""
+    Write-Host "Claude Code:" -ForegroundColor White
+    Write-Host "  CLAUDE.md -> .agent\AGENTS.MD" -NoNewline -ForegroundColor Cyan
+    Write-Host " (auto-loaded by Claude Code)" -ForegroundColor Gray
+}
 
 if ($symlinks.Count -gt 0) {
     Write-Host ""
