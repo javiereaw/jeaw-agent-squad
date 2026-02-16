@@ -87,7 +87,7 @@ Before claiming completion: run the command, read output, check exit code, THEN 
 
 ## Structure
 ```
-CLAUDE.md                       ← symlink to .agent/AGENTS.MD (Claude Code reads this)
-.agent/skills/{agent}/SKILL.md  ← canonical source
-.claude/skills/                 ← junction to .agent/skills/
+CLAUDE.md                       ← @import from agentes core (Claude Code + Gemini read this)
+AGENTS.md                       ← generated for Codex CLI (sync-codex.sh)
+.claude/skills/                 ← symlink to agentes/.agent/skills/
 ```
